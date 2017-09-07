@@ -5,7 +5,7 @@
 var tags = document.querySelectorAll('p,h1,h2,h3,h4,h5,h6,span,a,div,td,strong,li');
 for (var i = 0; i < tags.length; i++) {
     var tag = tags[i];
-    if(tag.innerText != "" && tag.children.length == 0){
+    if(tag.innerText != "" && tag.children.length <= 1){
               // Get parent id/class
               var currentTag = tag;
               var path = [];
