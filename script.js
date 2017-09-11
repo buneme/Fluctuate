@@ -38,10 +38,10 @@ for (var i = 0; i < tags.length; i++) {
                         if(tag.parentElement.innerText != tag.innerText && tag.parentElement.children.length == 1){
                         //alert("Not allow " + tag.tagName);
 
-                            click(newParentTag);
+                            //click(newParentTag);
 
                             //tag.parentElement.onclick.apply(tag.parentElement);
-                            return;
+                            //return;
                         }else{
                         //alert("allow " + tag.tagName);
                         }
