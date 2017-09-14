@@ -56,7 +56,12 @@ for (var i = 0; i < tags.length; i++) {
 }
 
 function getClassPos(tag, document){
-  var nodes = Array.prototype.slice.call(document.getElementsByClassName(tag.className));
+  if(typeof tag.className  === "undefined" || tag.className == "" || tag.className == "undefined"){
+    return -1;
+  }
+  var className = "." + tag.className.split(" ").join("."); 
+  var elements = document.querySelectorAll(tag.tagName + className);
+  var nodes = Array.prototype.slice.call(elements);
   //alert(nodes.length);
   var pos = nodes.indexOf( tag );
   return pos;
