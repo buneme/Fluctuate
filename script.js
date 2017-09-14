@@ -60,7 +60,7 @@ function getClassPos(tag, document){
     return -1;
   }
   var className = "." + tag.className.split(" ").join("."); 
-  var elements = document.querySelectorAll(tag.tagName + className);
+  var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
   var nodes = Array.prototype.slice.call(elements);
   //alert(nodes.length);
   var pos = nodes.indexOf( tag );
