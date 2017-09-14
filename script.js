@@ -59,10 +59,14 @@ function getClassPos(tag, document){
   if(typeof tag.className  === "undefined" || tag.className == "" || tag.className == "undefined"){
     return -1;
   }
-  var className = "." + tag.className.split(" ").join(".").replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); 
-  var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
-  var nodes = Array.prototype.slice.call(elements);
-  //alert(nodes.length);
-  var pos = nodes.indexOf( tag );
-  return pos;
+  try {
+    var className = "." + tag.className.split(" ").join(".").replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); 
+    var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
+    var nodes = Array.prototype.slice.call(elements);
+    //alert(nodes.length);
+    var pos = nodes.indexOf( tag );
+    return pos;
+  }catch(err) {
+    return -1;
+  }
 }
