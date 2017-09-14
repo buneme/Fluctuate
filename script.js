@@ -18,6 +18,11 @@ for (var i = 0; i < tags.length; i++) {
                   if(newParentTag.className != "" || newParentTag.id != ""){
                       tag.slot = path.join("/");
                       path.reverse();
+                      
+                      
+                      var parentClassPos = getClassPos(newParentTag, document);
+                      var classPos = getClassPos(tag, document);
+                     
                       tag.onclick = function(){
                           var dataArray = [];
                           dataArray.push({
@@ -25,12 +30,14 @@ for (var i = 0; i < tags.length; i++) {
                             "direct-parent-class" : tag.parentNode.className,
                             "direct-text" : tag.innerText,
                             "clicked" : tag.tagName,
+                            "classPos" : classPos,
                             "class" : this.className,
                             "id"  : this.id,
                             "text"  : this.innerText,
                             "tag" : this.tagName,
                             "count" : "0",
                             "parentId" : newParentTag.id,
+                            "parentClassPos": parentClassPos,
                             "parentClass" : newParentTag.className,
                             "location" : this.slot
                           });
@@ -45,4 +52,11 @@ for (var i = 0; i < tags.length; i++) {
                 }while(currentTag.parentNode != null);
         }
   }()); // immediate invocation
+}
+
+function getClassPos(tag, document){
+  var nodes = Array.prototype.slice.call(document.getElementsByClassName(tag.className));
+  //alert(nodes.length);
+  var pos = nodes.indexOf( tag );
+  return pos;
 }
