@@ -36,6 +36,7 @@ for (var i = 0; i < tags.length; i++) {
                             "text"  : this.innerText,
                             "tag" : this.tagName,
                             "count" : "0",
+                            "parentTag" : newParentTag.tagName,
                             "parentId" : newParentTag.id,
                             "parentClassPos": parentClassPos,
                             "parentClass" : newParentTag.className,
