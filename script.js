@@ -24,7 +24,6 @@ for (var i = 0; i < tags.length; i++) {
                       var classPos = getClassPos(tag, document);
                      
                       tag.onclick = function(){
-                          this.classList.add('buneme_fluctuate');
                           var dataArray = [];
                           dataArray.push({
                             "direct-parent-id" : tag.parentNode.id,
@@ -44,6 +43,7 @@ for (var i = 0; i < tags.length; i++) {
                             "location" : this.slot
                           });
                           alert(JSON.stringify(dataArray));
+                          this.classList.add('buneme_fluctuate');
                           event.stopPropagation()
                       }
                       break;
