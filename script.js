@@ -62,7 +62,6 @@ function getClassPos(tag, document){
   try {
     var className = "." + tag.className.split(" ").join(".");
     var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
-    console.log(className);
     var nodes = Array.prototype.slice.call(elements);
     //alert(nodes.length);
     var pos = nodes.indexOf( tag );
