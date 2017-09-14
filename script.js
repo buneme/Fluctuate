@@ -60,8 +60,9 @@ function getClassPos(tag, document){
     return -1;
   }
   try {
-    var className = "." + tag.className.split(" ").join(".").replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\\\$&"); 
+    var className = "." + tag.className.split(" ").join(".");
     var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
+    console.log(className);
     var nodes = Array.prototype.slice.call(elements);
     //alert(nodes.length);
     var pos = nodes.indexOf( tag );
