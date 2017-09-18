@@ -16,7 +16,7 @@ for (var i = 0; i < tags.length; i++) {
 
 
                   if(newParentTag.className != "" || newParentTag.id != ""){
-                      tag.slot = path.join("/");
+                      tag.slot = path.join("-");
                       path.reverse();
                       
                       
