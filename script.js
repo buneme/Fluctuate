@@ -43,8 +43,9 @@ for (var i = 0; i < tags.length; i++) {
                             "location" : this.slot
                           });
                           alert(JSON.stringify(dataArray));
-                          resetStyles();
-                          this.classList.add('buneme_fluctuate');
+                          if(!onSecondStep()){
+                            this.classList.add('buneme_fluctuate');
+                          }
                           event.stopPropagation()
                       }
                       break;
@@ -56,10 +57,17 @@ for (var i = 0; i < tags.length; i++) {
   }()); // immediate invocation
 }
 
-function resetStyles(){
+function onSecondStep(){
   var tags = document.querySelectorAll('.buneme_fluctuate');
+  var length = tags.length;
   for (var i = 0; i < tags.length; i++) {
     tags[i].classList.remove('buneme_fluctuate');
+  }
+
+  if(length == 0){
+    return false;
+  }else{
+    return true;
   }
 }
 
