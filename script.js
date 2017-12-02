@@ -18,11 +18,11 @@ for (var i = 0; i < tags.length; i++) {
                   if(newParentTag.className != "" || newParentTag.id != ""){
                       tag.slot = path.join("-");
                       path.reverse();
-                      
-                      
+
+
                       var parentClassPos = getClassPos(newParentTag, document);
                       var classPos = getClassPos(tag, document);
-                     
+
                       tag.onclick = function(){
                           var dataArray = [];
                           dataArray.push({
@@ -73,16 +73,20 @@ function onSecondStep(){
 
 function getClassPos(tag, document){
   if(typeof tag.className  === "undefined" || tag.className == "" || tag.className == "undefined"){
+  	//console.log("1st: " + typeof tag.className  === "undefined" + " Second " +  tag.className == "" + " third " + tag.className == "undefined");
     return -1;
   }
   try {
     var className = "." + tag.className.split(" ").join(".");
+    do{
+    className = className.replace("..",".");
+    }while(className.includes(".."));
     var elements = document.querySelectorAll(tag.tagName.toLowerCase() + className);
     var nodes = Array.prototype.slice.call(elements);
-    //alert(nodes.length);
     var pos = nodes.indexOf( tag );
     return pos;
   }catch(err) {
+    //console.log(err.message);
     return -1;
   }
 }

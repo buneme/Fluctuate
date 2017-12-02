@@ -1,0 +1,313 @@
+TYPE,REWRITE,PATTERN1,PATTERN2,PATTERN3,ORIGIN,REWRITE_TO,COMMENT,US_DATES,AM_PM
+helper,$MONTH,januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december,jan(..)|feb(..)|mar(..)|apr(..)|maj(..)|jun(..)|jul(..)|aug(..)|sep(..)|okt(..)|nov(..)|dec(..),-,januari,januari,"Exempel ""januari""",-1,-1
+helper,$WEEKDAY,måndag|tisdag|onsdag|torsdag|fredag|lördag|söndag,mån(..)|tis(..)|ons(..)|tor(..)|fre(..)|lör(..)|sön(..),-,måndag,måndag,"Exempel ""måndag""",-1,-1
+helper,$SWEEKDAY,måndag|tisdag|onsdag|torsdag|fredag|lördag|söndag,-,-,måndag,måndag,"Exempel ""måndag""",-1,-1
+helper,$EV,<var(..)|ef(..)|varje|återkommande?>,-,-,varje,varje,"Exempel ""varje"" or ""efter""",-1,-1
+helper,$UNIT,<timm(..)|dag(..)|veck(..)|månad(..)|år(..)>,-,-,timmar,timmar,"Exempel ""dagar""",-1,-1
+helper,$RS,[\.:]?<sta|n?dra|dje|e|\.|a>,-,-,1:sta,:sta,"Exempel ""1:sta"", ""2:dra""",-1,-1
+helper,$AMPM,<am|pm>,-,-,pm,-,Sweden is on the 24 hour clock,,
+helper,$TIME,"<@|kl(..)|vid>_\d{1,2}<[:\.\s]\d{1,2}>?_$AMPM?","<@|kl(..)|vid>?_\d{1,2}<:\d{1,2}>?_$AMPM","<@|kl(..)|vid>?_\d{1,2}[:\.]\d{1,2}_$AMPM?",kl. 14.00,kl. 14.00,"Exempel ""kl. 14.00"". Översätt ""klockan""",-1,-1
+helper,$STIME,"<@|kl(..)|vid>\s\d{1,2}<[:\.\s]\d{1,2}>?_<am|pm>?","<@|kl(..)|vid>?_\d{1,2}<:\d{1,2}>?_<am|pm>","<@|kl(..)|vid>?_\d{1,2}[:\.]\d{1,2}_<am|pm>?",kl. 14 ,kl. 14.00,,-1,-1
+helper,$SEP,"<^|$|[-/\s,]>",-,-,/,/,,-1,-1
+helper,$YEAR,[0-9][0-9][0-9][0-9],-,-,"""2014""","""2014""",,-1,-1
+helper,$RN,[0-9]?[0-9],-,-,"""12""","""12""",,-1,-1
+helper,$N,<[0-9]+|en|ett|två|tre|fyra|fem|sista>,-,-,två,tre,,-1,-1
+helper,$RDATE,<$N>_$RS? <$MONTH>_<$YEAR>?,<$MONTH> <$N>_$RS?_<$YEAR>?,<$YEAR>$SEP<$RN>$SEP<$RN>|<$RN>$SEP<$RN><$SEP<$YEAR>?>?,3 maj,3 maj,,-1,-1
+helper,$N,[0-9]+,-,-,"""5""","""5""",,,
+,,,,,,,,,
+resolve_day,"""1""",mn(..)|mån(..),-,-,mån,1,"Exempel ""mån"" for ""måndag""",-1,-1
+resolve_day,"""2""",tis(..),-,-,tis,2,,-1,-1
+resolve_day,"""3""",ons(..),-,-,ons,3,,-1,-1
+resolve_day,"""4""",tor(..),-,-,tor,4,,-1,-1
+resolve_day,"""5""",fre(..),-,-,fre,5,,-1,-1
+resolve_day,"""6""",lör(..),-,-,lör,6,,-1,-1
+resolve_day,"""7""",sn(..)|sön(..),-,-,sön,7,,-1,-1
+,,,,,,,,,
+resolve_month,"""1""",jan(..),-,-,Jan,1,"Example ""jan"" for ""january""",-1,-1
+resolve_month,"""2""",feb(..),-,-,Feb,2,,-1,-1
+resolve_month,"""3""",mar(..),-,-,Mar,3,,-1,-1
+resolve_month,"""4""",apr(..),-,-,Apr,4,,-1,-1
+resolve_month,"""5""",maj(..),-,-,Maj,5,,-1,-1
+resolve_month,"""6""",jun(..),-,-,Jun,6,,-1,-1
+resolve_month,"""7""",jul(..),-,-,Jul,7,,-1,-1
+resolve_month,"""8""",aug(..),-,-,Aug,8,,-1,-1
+resolve_month,"""9""",sep(..),-,-,Sep,9,,-1,-1
+resolve_month,"""10""",okt(..),-,-,Okt,10,,-1,-1
+resolve_month,"""11""",nov(..),-,-,Nov,11,,-1,-1
+resolve_month,"""12""",dec(..),-,-,Dec,12,,-1,-1
+,,,,,,,,,
+resolve_unit,hour,timm(..),-,-,timmar,tim.,"Example ""hour(..)"" for ""hours""",-1,-1
+resolve_unit,week,veck(..),-,-,veckor,vecka,,-1,-1
+resolve_unit,month,mån(..),-,-,månader,månad,,-1,-1
+resolve_unit,year,år(..),-,-,"år
+","år
+",,-1,-1
+resolve_unit,day,dag(..),-,-,dagar,dag,,-1,-1
+resolve_unit,"""1""",ett,en,-,ett,1,,-1,-1
+resolve_unit,"""2""",tv,-,-,två,2,,-1,-1
+resolve_unit,"""3""",tre,-,-,tre,3,,-1,-1
+resolve_unit,"""4""",fyra,-,-,fyra,4,,-1,-1
+resolve_unit,"""5""",fem,-,-,fem,5,,-1,-1
+resolve_unit,"""6""",sex,-,-,sex,6,,-1,-1
+resolve_unit,"""7""",sju,-,-,sju,7,,-1,-1
+resolve_unit,"""8""",åtta,-,-,"åtta
+",8,,-1,-1
+resolve_unit,"""9""",nio,-,-,nio,9,,-1,-1
+resolve_unit,"""10""",tio,-,-,tio,10,,-1,-1
+resolve_unit,"""5""",sista,-,-,sista,5,,-1,-1
+,,,,,,,,,
+resolve_misc,slut,ending,-,-,sluta,slutar,"Example: ""ending in 6 months""",-1,-1
+resolve_misc,var,every,-,-,var,varje,"Example: ""every 3 days""",-1,-1
+normalize,",",;,-,-,,,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,$1 start $2,($WEEKDAY) i ($MONTH),-,-,-,-,,-1,-1
+normalize,$1 $2,($SEP)i ($MONTH),-,-,i januari,januari,"Example ""in january"" to ""of january""",-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,"""okt 31""",halloween,-,-,halloween,"""okt 31""",,-1,-1
+normalize,"""feb 14""",valentines_dag,valentine,-,valentines dag,"""feb 14""",,-1,-1
+normalize,"""dec 31""",nyårsafton,nyårskväll,-,nyårsafton,"""dec 31""",,-1,-1
+normalize,"""jan 1""",nyårsdag,-,-,nyårsdag,"""jan 1""",,-1,-1
+normalize,"""apr 30""",valborgsmässoafton,-,-,valborgsmässoafton,"""apr 30""",,-1,-1
+normalize,"""sista söndagen i maj""",mors_dag,-,-,morsdag,"""sista söndagen i maj""",,-1,-1
+normalize,"""andra söndagen i november""",fars_dag,-,-,farsdag,andra söndagen i november,,-1,-1
+normalize,"""juni 6""",national_dagen,-,-,nationaldagen,"""juni 6""",,-1,-1
+normalize,"""okt 31""",alla helgons dag,-,-,alla helgons dag,"""okt 31""",Add dates that are specific to your langauge,-1,-1
+,,,,,,,,,
+normalize,varje dag $1,varje morgon ($TIME),-,-,varje morgon kl 9,varje dag kl 9,,-1,-1
+normalize,varje dag $1,varje natt ($TIME),-,-,varje natt kl. 14.00,varje dag kl. 14.00,,-1,-1
+normalize,varje dag $1,varje kväll ($TIME),-,-,varje kväll kl. 14.00,varje dag kl. 14.00,,-1,-1
+,,,,,,,,,
+normalize,var 2 veckor,var fjortonde dag,-,-,var fjortonde dag,var 2 veckor,,-1,-1
+,,,,,,,,,
+normalize,9:00,på morgon<en>?,,-,på morgon,9:00,,-1,1
+normalize,12:00,på eftermiddag<en>?,,-,på eftermiddag,12:00,,-1,1
+,,,,,,,,,
+normalize,19:00,<på> kvällen,kväll,-,kväll,19:00,,-1,1
+normalize,22:00,<på> natten,natt,-,natt,22:00,,-1,1
+normalize,12:00,<mitt på> dagen,middagstid,mitt på dagen,mitt på dagen,12:00,,-1,1
+,,,,,,,,,
+normalize,09:00,på morgon<en>?,-,-,på morgon,"""09:00""",,-1,0
+normalize,12:00,på eftermiddag<en>?,-,-,på eftermiddag,"""12:00""",,-1,0
+,,,,,,,,,
+normalize,19:00,på kvällen,kväll,-,kväll,"""19:00""",,-1,0
+normalize,22:00,på natten,natt,-,på natten,"""22:00""",,-1,0
+normalize,12:00,mitt på dagen,mitt på dagen,mitt på dagen,mitt på dagen,"""12:00""",,-1,0
+normalize,"""9:00 """,tidigt,-,-,"""tidigt ""","""9:00""",,-1,-1
+,,,,,,,,,
+normalize,"""+$1""",om\s+(\d+.+),-,-,om 5 dagar,"""+5 dagar""","Example ""in 5 days""",-1,-1
+normalize,idag$1,nu($SEP),-,-,"""nu ""","""idag""",,-1,-1
+normalize,"varje lördag, söndag",hela veckoslutet,-,-,hela veckoslutet,"varje lördag, söndag",,-1,-1
+normalize,$1 $2,($SEP)alla($SEP),-,-,"""alla """,""" """,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize, imorgon,$SEPannan dag,-,-,annan dag, imorgon,,-1,-1
+normalize,$1,denna ($WEEKDAY),-,-,denna måndag,måndag,"Example: ""this monday""",-1,-1
+,,,,,,,,,
+normalize, ,från idag(..),-,-,från idag,""" ""","Example ""from today""",-1,-1
+normalize,kl. $1,från ($STIME),-,-,från 14.00,kl. 14.00,"Example ""from 3pm""",-1,-1
+,,,,,,,,,
+normalize,slut,fram till,-,-,-,-,,-1,-1
+normalize,slut,till|slutar?,-,-,till,slut,"Example ""every day until 3 may""",-1,-1
+,,,,,,,,,
+normalize,var 2 månad,varannan månad,-,-,varannan månad,var 2 månad,,-1,-1
+normalize,var 2 vecka,varannan vecka,-,-,varannan vecka,var 2 vecka,,-1,-1
+normalize,var 2 dag,varannan dag,-,-,varannan dag,var 2 dag,,-1,-1
+normalize,varje dag,dagligen,-,-,dagligen,varje dag,,-1,-1
+normalize,varje vecka,veckovis,-,-,veckovis,varje vecka,,-1,-1
+normalize,varje månad,månadsvis,-,-,månadsvis,varje månad,,-1,-1
+,,,,,,,,,
+normalize,arbetsdag,veckodag,-,-,veckodag,arbetsdag,,-1,-1
+,,,,,,,,,
+normalize,"""+3 månader""",nästa kvartal,-,-,nästa kvartal,"""+3 månader""",,-1,-1
+normalize,"""1 jan""",första kvartalet,1<:?sta>? kvartalet,-,1:sta kvartalet,"""1 jan""",,-1,-1
+normalize,"""1 april""",andra kvartalet,2<:?n?dra>? kvartalet,-,2:dra kvartalet,"""1 april""",,-1,-1
+normalize,"""1 juli""",tredje kvartalet,3<:?dje>? kvartalet,-,3:dje kvartalet,"""1 juli""",,-1,-1
+normalize,"""1 oktober""",fjärde kvartalet,4<:?e>? kvartalet,-,4:e kvartalet,"""1 oktober""",,-1,-1
+normalize,var tredje månad,kvartalsvis,-,-,kvartalsvis,var tredje månad,,-1,-1
+normalize,3 månader,kvartal,-,-,kvartal,3 månader,,-1,-1
+,,,,,,,,,
+normalize,"""+2 månader""",någon dag,-,-,någon dag,"""+2 månader""",,-1,-1
+,,,,,,,,,
+normalize,1:sta,första,-,-,första,1:sta,,-1,-1
+normalize,2:ndra,andra,-,-,andra,2:ndra ,,-1,-1
+normalize,3:dje,tredje,-,-,tredje,3:dje ,,-1,-1
+normalize,4:e,fjärde,-,-,fjärde,4:e ,,-1,-1
+normalize,5:e,femte,-,-,femte,5:e,,-1,-1
+normalize,6:e,sjätte,-,-,sjätte,6:e,,-1,-1
+normalize,7:e,sjunde,-,-,sjunde,7:e,,-1,-1
+normalize,8:e,"åttonde
+",-,-,"åttonde
+",8:e,,-1,-1
+normalize,9:e,nionnde,-,-,nionnde,9:e,,-1,-1
+normalize,10:e,tionde,-,-,tionde,10:e,,-1,-1
+,,,,,,,,,
+normalize,"""$11$2""",($SEP)ett($SEP),-,-,""" ett """,""" 1 """,,-1,-1
+normalize,"""$12$2""",($SEP)två($SEP),-,-,""" två """,""" 2 """,,-1,-1
+normalize,"""$13$2""",($SEP)tre($SEP),-,-,""" tre """,""" 3 """,,-1,-1
+normalize,"""$14$2""",($SEP)fyra($SEP),-,-,""" fyra """,""" 4 """,,-1,-1
+normalize,"""$15$2""",($SEP)fem($SEP),-,-,""" fem """,""" 5 """,,-1,-1
+normalize,"""$16$2""",($SEP)sex($SEP),-,-,""" sex """,""" 6 """,,-1,-1
+normalize,"""$17$2""",($SEP)sju($SEP),-,-,""" sju """,""" 7 """,,-1,-1
+normalize,"""$18$2""",($SEP)åtta($SEP),-,-,""" åtta """,""" 8 """,,-1,-1
+normalize,"""$19$2""",($SEP)nio($SEP),-,-,""" nio """,""" 9 """,,-1,-1
+normalize,"""$110$2""",($SEP)tio($SEP),-,-,""" tio """,""" 10 """,,-1,-1
+,,,,,,,,,
+normalize,,förfaller_<den>?,-,-,förfaller den,,"Example ""due by nov. 5""",-1,-1
+,,,,,,,,,
+normalize, $1,",_($YEAR)",-,-,", 2014",""" 2014""",,-1,-1
+,,,,,,,,,
+normalize,pm,p[.-]?m[.-]?,-,-,p.m.,pm,doesn't exist,-1,-1
+normalize,am,a[.-]?m[.-]?,-,-,a.m.,am,doesn't exist,-1,-1
+normalize,$1 pm$2,($N)_p(\s|$),-,-,3p,"""3 pm""","Example ""2p"" => ""2pm""",-1,-1
+normalize,$1 am$2,($N)_a(\s|$),-,-,3a,"""3 am""",,-1,-1
+normalize,$1,exakt($SEP),-,,"""exakt""",""" ""","Example ""today at 2pm sharp""",-1,-1
+normalize,$1:$2$3,($N)-_($N)(am|pm),-,-,3-30pm,"""3:30pm""",,-1,-1
+,,,,,,,,,
+,om $1,\+_($N),-,-,"""+5""",om 5,,-1,-1
+,,,,,,,,,
+normalize,,klockan,-,-,klockan,,English only probably,-1,-1
+,,,,,,,,,
+normalize,$1 dag $2,($EV) ($STIME)_$,-,-,varje 14.00,varje dag 14.00,"Example ""every 2pm"" => ""every day 2pm""",-1,-1
+,,,,,,,,,
+normalize,$1,av ($MONTH),-,-,av maj,maj,"Example ""mid may""",-1,-1
+normalize,15:e $1,mitt<en>?_($MONTH),-,-,mitt maj,15:e maj,"Example ""mid may""",-1,-1
+,,,,,,,,,
+normalize,,återkommande,-,-,-,-,-,-1,-1
+normalize,$1 $2 med början 1 $3 med slut sista dagen i $3,($EV) ($WEEKDAY) i ($MONTH),-,-,varje måndag i maj,varje måndag med början 1 maj med slut sista dagen i maj,"Example ""every monday of may""",-1,-1
+normalize,$2 $3 med början $1,"($RDATE)[-\s,\.]*($EV)_(.+)",-,-,"5:e maj, varje dag",varje dag med början 5:e maj,"Example: 5 may, every day",-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,varje arbetsdag,på veckodagar?,på arbetsdagar,-,på veckodagar,varje arbetsdag,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+normalize,$1 $2,($N)$SEP($MONTH),-,-,"""5/maj""","""5 maj""",,-1,-1
+normalize,$1 $2,($MONTH)$SEP($N),-,-,"""maj/5""","""maj 5""",,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+normalize,"""om 3 timmar""",om några timmar,-,-,om några timmar,om 3 timmar,,-1,-1
+normalize, $1,"_,_($STIME)",-,-,""", 15.00""",""" 15.00""",,-1,-1
+normalize,$1 ,"($STIME)_,_",-,-,"""15.00, ""","""15.00 """,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,arbetsdag,m-f,mon-fri,-,m-f,arbetsdag,,-1,-1
+,,,,,,,,,
+normalize,$1 ,($MONTH) den,-,-,maj den,"""maj ""","Example ""march the 23rd""",-1,-1
+normalize, $1,den ($MONTH),-,-,den maj,""" maj""","Example ""23rd of march""",-1,-1
+,,,,,,,,,
+normalize,"lördag
+",detta veckoslutet,på veckoslutet,<denna >?veckohelg(..),detta veckoslutet,lördag,,-1,-1
+normalize,nästa lördag,nästa veckoslut,-,-,nästa veckoslut,nästa lördag,,-1,-1
+normalize,,följande,-,-,följande,"""""",,-1,-1
+normalize,1:e jan,nästa år,-,-,nästa år,1:e jan,,-1,-1
+normalize,med början 1. jan,på året,-,-,på året,med början 1. jan,,-1,-1
+normalize,nästa $1,($WEEKDAY) nästa vecka,-,-,måndag nästa vecka,nästa måndag,"Example ""monday of next week""",-1,-1
+normalize, ,denna veckan,-,-,denna veckan,""" """,,-1,-1
+normalize,1:sta,nästa månad(..),-,-,nästa månad,1:sta,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,varje sista arbetsdag,sista_arbetsdagen_<i>?_varje(..) månad,-,-,sista arbetsdagen i varje månad,varje sista arbetsdag,,-1,-1
+normalize,varje arbetsdag,arbetsdag_<i>?_var(..) månad,-,-,arbetsdag i var månad,varje arbetsdag,,-1,-1
+normalize,varje arbetsdag,^arbetsdagar?,-,-,arbetsdagar,varje arbetsdag,,-1,-1
+normalize,varje lördag,^veckoslut?,-,-,veckoslut,varje lördag,,-1,-1
+,,,,,,,,,
+normalize,1:sta $1,^<i>?_<början(..)>_<av>? ($MONTH)$,-,-,i början av maj,"""1:sta maj""","Example ""at the beginning of may""",-1,-1
+normalize,sista dagen i $1,^<i>?_slut(..)_<av>? ($MONTH)$,-,-,i slutet av maj,"""sista dagen i maj""","Example ""at the end of may""",-1,-1
+,,,,,,,,,
+normalize,varje nästa $1,varannan ($SWEEKDAY),-,-,varannan måndag,varje nästa måndag,"Example ""every other sunday"" => ""every next sunday""",-1,-1
+normalize,nästa $1,annan ($SWEEKDAY),-,-,annan måndag,nästa måndag,"Example ""other sunday"" => ""next sunday""",-1,-1
+normalize, 2 veckor,$SEPannan vecka,-,-,annan vecka, 2 veckor,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,,^årligen den,,,-,-,,-1,-1
+normalize,varje år,upprepa årligen,upprepa årligen_<börj(..)>?,-,upprepa årligen,varje år,,-1,-1
+normalize,varje $1,(.+)_årligen,-,-,"""maj årligen""","""varje maj """,,-1,-1
+normalize,varje år,årligen,-,-,årligen,varje år,,-1,-1
+,,,,,,,,,
+normalize,$1,senast ($WEEKDAY),-,-,senast måndag,måndag,"Example ""by monday""",-1,-1
+normalize,$1,senast ($RDATE),-,-,senast 3:dje maj,3:dje maj,"Example ""by 3rd may""",-1,-1
+normalize,nästa,senast nästa(..),-,-,senast nästa,nästa,,-1,-1
+normalize,$1 kl. $2,($SEP)senast($SEP),-,-,idag senast 15.00,idag kl. 15.00,"Example ""every monday by 2pm""",-1,-1
+,,,,,,,,,
+normalize,$1,upprepa ($EV),-,-,upprepa varje,varje,,-1,-1
+normalize,varje arbetsdag,upprepa arbetsdag(..),-,-,upprepa arbetsdagar,varje arbetsdag,,-1,-1
+normalize,varje $1,upprepa\s+(.+),-,-,upprepa dag,varje dag,,-1,-1
+,,,,,,,,,
+normalize,sista dagen,slutet_av månaden,-,-,slutet av månaden,sista dagen,,-1,-1
+normalize,varje sista dag,slutet_<av>?_varje månad,-,-,slutet av varje månad,varje sista dag,,-1,-1
+,,,,,,,,,
+normalize,om 3 dagar,om_?_några dagar,några dagar,-,om några dagar,om 3 dagar,,-1,-1
+,,,,,,,,,
+normalize,idag,snarast möjligt,-,-,,,,-1,-1
+,,,,,,,,,
+normalize,varje sista dag,sista_<i>?_var(..) månad,-,-,sista varje månad,varje sista dag,,-1,-1
+normalize,varje 1:sta dag,<1:sta|första>_<i>?_var(..) månad,-,-,1:sta varje månad,varje 1:sta dag,,-1,-1
+,,,,,,,,,
+normalize,$1 månader ,($N)_må($SEP),-,-,"""3må ""","""3 månader ""","Example ""3 mo""",-1,-1
+,,,,,,,,,
+normalize,"""slut +1 vecka""",i <en> veck(..),-,-,i en vecka,slut +1 vecka,"Example ""for one week""",-1,-1
+normalize,"""slut +$1 veckor""",i ($N) veck(..),-,-,i 3 veckor,slut +3 veckor,,-1,-1
+,,,,,,,,,
+normalize,"""+$1 $2""",^($N) ($UNIT),-,-,3 dagar,"""+3 dagar""","Example ""3 days"" => ""in 3 days""",-1,-1
+,,,,,,,,,
+normalize,varje månad,en gång<_i_>?månaden,-,-,en gång i månaden,varje månad,,-1,-1
+normalize,varje 15 dag,två gånger<_i_>?månaden,-,-,två gånger i månaden,varje 15 dag,,-1,-1
+,,,,,,,,,
+normalize,$1,^($N$RS) månad(..),-,-,3:dje månaden,3:dje,,-1,-1
+,,,,,,,,,
+normalize, $1 ,$SEP<med|och> (slut(..)),-,-,""" med slut""", slut ,"Example "" and ending"" => "" ending""",-1,-1
+normalize, $1 ,$SEP<med|och> (börj(..)),-,-,""" med börjar""", börjar ,"Example "" and starting"" => "" starting""",-1,-1
+normalize,", ",\s+<och>\s+,",_<med|och>\s+",-,mån och tis,"mån, tis","Example "" and "" => "", """,-1,-1
+,,,,,,,,,
+normalize,med slut om $1 $2,under kommande ($N) (veck<..>|månad<..>|dag<..>),-,-,under kommande 3 veckor,med slut om 3 veckor,,-1,-1
+normalize,med slut om $1 $2,i ($N) (veck<..>|månad<..>|dag<..>),-,-,i 3 dagar,med slut om 3 dagar,,-1,-1
+,,,,,,,,,
+normalize,varje dag slut om $1 $2,^slut< om>? ($N) (veck<..>|månad<..>|dag<..>),-,-,slut om 3 månader,varje dag slut om 3 månader,"Example ""ending in 3 weeks"" => ""every day ending in 3 week""",-1,-1
+,,,,,,,,,
+normalize,"$1 $2 $4, $3 $4","($EV) ($N_<$RS>?), ($N_<$RS>?) ($WEEKDAY)",-,-,"varje 2:ndra, 3:dje måndag","varje 2:ndra måndag, 3:dje måndag","Example ""every 2nd, 3rd monday"" => ""every 2nd monday, 3rd monday""",-1,-1
+,,,,,,,,,
+normalize,varje,varje varje,-,-,varje varje,varje,,-1,-1
+,,,,,,,,,
+normalize,varje!$1,^efter($SEP),-,-,efter,varje!,,-1,-1
+,,,,,,,,,
+normalize,$1 $2:$3,($SEP_<@|at>)_(\d\d)(\d\d),-,-,at 2300,at 23:00,,-1,-1
+,,,,,,,,,
+normalize,$1 pm,(\d+)_pm$SEP,-,-,"""1pm""","""1 pm""",,-1,-1
+normalize,$1 am,(\d+)_am$SEP,-,-,"""1am""","""1 am""",,-1,-1
+,,,,,,,,,
+normalize,$2 $1,($N_$RS) ($EV),-,-,3:dje varje,varje 3:dje,,-1,-1
+,,,,,,,,,
+normalize,$1 $2,($SEP) <den>?(.+),-,-,""" den 5:e""",""" 5:e""",,-1,-1
+,,,,,,,,,
+normalize,$1 $2,($SEP)den (\d),-,-,den 3,"""3""",,-1,-1
+normalize, ,($SEP)med($SEP),-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize, $1/$2/20$3 ,$SEP(\d\d)/(\d\d)/(\d\d)$SEP,-,-,"""05/01/15 """,""" 05/01/2015 """,,-1,-1
+,,,,,,,,,
+normalize,$1 $2:$3,($SEP_kl(..)|@)_(\d\d)(\d\d),-,-,kl 2300,kl 23:00,,-1,-1
+,,,,,,,,,
+normalize,varje arbetsdag,under arbetsdagar,-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize, ,$SEPpå$SEP,-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize, ,^avslut(..),-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize,$1 pm,(\d) em,-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize,,"^[\.,!;]+",-,-,,,,-1,-1
+normalize,$1,"([a-zA-z]+)_[\.,!;-]+$",-,-,,,,-1,-1
+,,,,,,,,,
+normalize,:00,\.00,-,-,,,,-1,-1
+normalize,:15,\.15,-,-,,,,-1,-1
+normalize,:30,\.30,-,-,,,,-1,-1
+normalize,:45,\.45,-,-,,,,-1,-1
+,,,,,,,,,
+normalize,,^@_.+,-,-,@home,,,-1,-1
+,,,,,,,,,
+normalize,$1 AM,(\d+)_f\.?m\.?,-,-,"""2 fm""","""2 AM""",,-1,-1
+normalize,$1 PM,(\d+)_e\.?m\.?,-,-,"""2em""","""2 PM""",,-1,-1
+,,,,,,,,,
+normalize,start om idag,start idag,-,-,-,-,,-1,-1

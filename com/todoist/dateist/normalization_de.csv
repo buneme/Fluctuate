@@ -1,0 +1,334 @@
+TYPE,REWRITE,PATTERN1,PATTERN2,PATTERN3,ORIGIN,REWRITE_TO,COMMENT,US_DATES,AM_PM
+,,,,,,,,,
+helper,$MONTH,<J<a|ä>nuar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember>\.?,<J<a|ä>n|Febr?|Mär|Mrz|Apr|Mai|Jun|Jul|Aug|Sept?|Okt|Nov|Dez>\.?,-,Januar,Januar,"Example ""january""",-1,-1
+helper,$WEEKDAY,<Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag>s?,<Mo|Di|Mi|Do|Fr|Sa|So>\.?,-,Montag,Montag,"Example ""monday""",-1,-1
+helper,$SWEEKDAY,<Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag>s?,-,-,Montag,Montag,"Example ""monday""",-1,-1
+helper,$EV,<am|an>?_<jede(..)|nach.(..)|jeden?|wiederhol(..)|alle(..)|immer>,-,-,jeden?,jeden?,"Example ""every"" or ""after""",-1,-1
+helper,$UNIT,Stunden?|Tage?|Wochen?|Monate?|Jahre?,-,-,Stunden,Stunden,"Example ""days""",-1,-1
+helper,$RS,<\.|ten|-ten>,-,-,1,1,"Example ""1st"", ""2nd""",-1,-1
+helper,$AMPM,<am|pm>,-,-,pm,-,,,
+helper,$TIME,"<<<@|um|am>\.?_\d{1,2}<[:\s]\d{1,2}>?_$AMPM?_<Uhr>?>|\d+\.?_Uhr>","<@|um|am>?\.?_\d{1,2}<:\d{1,2}>?_$AMPM_<Uhr>?","<@|um|am>?\.?_\d{1,2}[:]\d{1,2}_$AMPM?_<Uhr>?",um 14 Uhr,um 14 Uhr,"Example ""at 2pm"". Translate ""at""",-1,-1
+helper,$STIME,"<<<@|um|am>\.?_\d{1,2}<[:\s]\d{1,2}>?_$AMPM?_<Uhr>?>|\d+\.?_Uhr>","<@|um|am>?\.?_\d{1,2}<:\d{1,2}>?_<am|pm>_<Uhr>?","<@|um|am>?\.?_\d{1,2}[:]\d{1,2}_<am|pm>?_<Uhr>?",um 2,um 2,,-1,-1
+helper,$SEP,"<^|$|[-/\s,]>",-,-,/,/,,-1,-1
+helper,$YEAR,[0-9][0-9][0-9][0-9],-,-,"""2014""","""2014""",,-1,-1
+helper,$RN,[0-9]?[0-9],-,-,"""12""","""12""",,-1,-1
+helper,$N,<[0-9]+|ein(..)|zwei(..)|drei(..)|vier(..)|fünf(..)|sech(..)|sieb(..)|acht(..)|neun(..)|zehn(..)|elf(..)Izwölf(..)|letzt(..)>,-,-,zwei,zwei,,-1,-1
+helper,$RDATE,<$N>_$RS? <$MONTH>_<$YEAR>?,<$MONTH> <$N>_$RS?_<$YEAR>?,<$YEAR>$SEP<$RN>$SEP<$RN>|<$RN>$SEP<$RN><$SEP<$YEAR>?>?,3. Mai,3. Mai,,-1,-1
+helper,$N,[0-9]+,-,-,"""5""","""5""",,,
+,,,,,,,,,
+resolve_day,"""1""",Mo(..),-,-,Mo.,1,"Example ""mon"" for ""monday""",-1,-1
+resolve_day,"""2""",Di(..),-,-,Di.,2,,-1,-1
+resolve_day,"""3""",Mi(..),-,-,Mi.,3,,-1,-1
+resolve_day,"""4""",Do(..),-,-,Do.,4,,-1,-1
+resolve_day,"""5""",Fr(..),-,-,Fr.,5,,-1,-1
+resolve_day,"""6""",Sa(..),-,-,Sa.,6,,-1,-1
+resolve_day,"""7""",So(..),-,-,So.,7,,-1,-1
+,,,,,,,,,
+resolve_month,"""1""",J<a|ä>n(..),-,-,Jan,1,"Example ""jan"" for ""january""",-1,-1
+resolve_month,"""2""",Feb(..),-,-,Feb,2,,-1,-1
+resolve_month,"""3""",Mär(..)|Mrz,-,-,Mär,3,,-1,-1
+resolve_month,"""4""",Apr(..),-,-,Apr,4,,-1,-1
+resolve_month,"""5""",Mai(..),-,-,Mai,5,,-1,-1
+resolve_month,"""6""",Jun(..),-,-,Jun,6,,-1,-1
+resolve_month,"""7""",Jul(..),-,-,Jul,7,,-1,-1
+resolve_month,"""8""",Aug(..),-,-,Aug,8,,-1,-1
+resolve_month,"""9""",Sep(..),-,-,Sep,9,,-1,-1
+resolve_month,"""10""",Okt(..),-,-,Okt,10,,-1,-1
+resolve_month,"""11""",Nov(..),-,-,Nov,11,,-1,-1
+resolve_month,"""12""",Dez(..),-,-,Dez,12,,-1,-1
+,,,,,,,,,
+resolve_unit,hour,Stunde(..),-,-,Stunden,Stunde,"Example ""hour(..)"" for ""hours""",-1,-1
+resolve_unit,week,Woche(..),-,-,Wochen,Woche,,-1,-1
+resolve_unit,month,Monat(..),-,-,Monate,Monat,,-1,-1
+resolve_unit,year,Jahr(..),-,-,Jahre,Jahr,,-1,-1
+resolve_unit,day,Tag(..),-,-,Tage,Tag,,-1,-1
+resolve_unit,"""1""",ein(..),-,-,eins,1,,-1,-1
+resolve_unit,"""2""",zwei(..),-,-,zwei,2,,-1,-1
+resolve_unit,"""3""",drei(..),-,-,drei,3,,-1,-1
+resolve_unit,"""4""",vier(..),-,-,vier,4,,-1,-1
+resolve_unit,"""5""",fünf(..),-,-,fünf,5,,-1,-1
+resolve_unit,"""6""",sech(..),-,-,sechs,6,,-1,-1
+resolve_unit,"""7""",sieb(..),-,-,sieben,7,,-1,-1
+resolve_unit,"""8""",acht(..),-,-,acht,8,,-1,-1
+resolve_unit,"""9""",neun(..),-,-,neun,9,,-1,-1
+resolve_unit,"""10""",zehn(..),-,-,zehn,10,,-1,-1
+resolve_unit,"""11""",elf(..),-,-,elf,11,,-1,-1
+resolve_unit,"""12""",zwölf(..),-,-,zwölf,12,,-1,-1
+resolve_unit,"""5""",letzt(..),-,-,letzter?,5,,-1,-1
+,,,,,,,,,
+resolve_misc,bis,ending,-,-,Ende,mit Enddatum,"Example: ""ending in 6 months""",-1,-1
+resolve_misc,jeden,every,-,-,jd.,jeden?,"Example: ""every 3 days""",-1,-1
+,,,,,,,,,
+normalize,",",;,-,-,,,,-1,-1
+,,,,,,,,,
+normalize,für,während,-,-,während,für,"Example ""every day during 6 months""",-1,-1
+,,,,,,,,,
+,,,,,,,,,
+,"""24 Dez.""",Weihnachten,Weihnachten,-,Weihnachten,"""24 Dez.""",,-1,-1
+normalize,"""31 Okt.""",Halloween,-,-,Halloween,"""31 Okt.""",,-1,-1
+normalize,"""14 Febr.""",Valentinstag ,Valentinstag,-,Valentinstag,"""14 Febr.""",,-1,-1
+normalize,"""31 Dez.""",Neujahrsabend,,-,Neujahrsabend,"""31 Dez.""",,-1,-1
+normalize,"""1 Jan.""",Neujahrstag,Neujahr,-,Neujahrstag,"""1 Jan.""",,-1,-1
+normalize,"""am zweiten Sonntag im Mai""",Muttertag,-,-,Muttertag,"""am zweiten Sonntag im Mai""",,-1,-1
+normalize,"""am dritten Sonntag im Juni""",Vatertag,-,-,Vatertag,am dritten Sonntag im Juni,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,2 Wochen,14 Tage,vierzehn Tage,-,vierzehn Tage,2 Wochen,,-1,-1
+,,,,,,,,,
+normalize,9 Uhr,morgens,-,-,morgens,"""9 Uhr""",,-1,1
+normalize,12 Uhr,nachmittags,Nachmittag,-,Nachmittag,"""12 Uhr""",,-1,1
+,,,,,,,,,
+normalize,19 Uhr,abends,Abend,-,Abend,19 Uhr,,-1,1
+normalize,22 Uhr,nachts,Nacht,-,Nacht,22 Uhr,,-1,1
+normalize,12 Uhr,mittags,Mittag,Mittag,Mittag,12 Uhr,,-1,1
+,,,,,,,,,
+normalize,09:00,morgens,-,-,morgens,"""09:00""",,-1,0
+normalize,12:00,nachmittags,Nachmittag,-,Nachmittag,"""12:00""",,-1,0
+,,,,,,,,,
+normalize,19:00,abends,<in der>?_Abend,-,Abend,"""19:00""",,-1,0
+normalize,22:00,nachts,<in der>?_Nacht,-,in der Nacht,"""22:00""",,-1,0
+normalize,12:00,mittags?,-,-,mittags,"""12:00""",,-1,0
+normalize,"""9 Uhr """,früh,-,-,"""früh ""","""9 Uhr""",,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,heute$1,jetzt($SEP),-,-,"""jetzt ""","""heute """,,-1,-1
+normalize,"jeden Samstag, Sonntag",das ganze Wochenende,-,-,das ganze Wochenende,"jeden Samstag, Sonntag",,-1,-1
+normalize,jeden Tag um 9,jeden Morgen,-,-,-,-,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,morgen,^am nächsten Tag,-,-,am nächsten Tag,morgen,,-1,-1
+normalize,$1,diesen ($WEEKDAY),-,-,diesen Montag,Montag,"Example: ""this monday""",-1,-1
+,,,,,,,,,
+normalize, ,ab heute(..),-,-,ab heute,""" ""","Example ""from today""",-1,-1
+normalize,um $1,ab ($STIME),-,-,ab 14 Uhr,um 14 Uhr,"Example ""from 3pm""",-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,alle 2 Monate,zweimal monatlich,-,-,zweimal monatlich,alle 2 Monate,,-1,-1
+normalize,alle 2 Wochen,zweimal wöchentlich,-,-,zweimal wöchentlich,alle 2 Wochen,,-1,-1
+normalize,alle 2 Tage,zweimal täglich,-,-,zweimal täglich,alle 2 Tage,,-1,-1
+normalize,jeden Tag,täglich,-,-,täglich,jeden Tag,,-1,-1
+normalize,jede Woche,wöchentlich,-,-,wöchentlich,jede Woche,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+normalize,"""+3 Monate""",<im_>?nächst(..) <Vierteljahr|Quartal>,-,-,nächstes Vierteljahr,"""+3 Monate""",,-1,-1
+normalize,"""1. Jan.""",erstes <Vierteljahr|Quartal>,1. <Vierteljahr|Quartal>,-,1. Vierteljahr,"""1. Jan.""",,-1,-1
+normalize,"""1. April""",zweites <Vierteljahr|Quartal>,2. <Vierteljahr|Quartal>,-,2. Vierteljahr,"""1. April""",,-1,-1
+normalize,"""1. Juli""",drittes <Vierteljahr|Quartal>,3. <Vierteljahr|Quartal>,-,3. Vierteljahr,"""1. Juli""",,-1,-1
+normalize,"""1. Oktober""",viertes <Vierteljahr|Quartal>,4. <Vierteljahr|Quartal>,-,4. Vierteljahr,"""1. Oktober""",,-1,-1
+normalize,alle 3 Monate,vierteljährlich,-,-,vierteljährlich,alle 3 Monate,,-1,-1
+normalize,3 Monate,<Vierteljahr|Quartal>$SEP,-,-,Vierteljahr,3 Monate,,-1,-1
+,,,,,,,,,
+normalize,"""+2 Monate""",eines_tages,-,-,eines Tages,"""+2 Monate""",,-1,-1
+,,,,,,,,,
+normalize,$1 Tag,($EV)Tage ,-,-,-,-,"Example ""everyday""",-1,-1
+,,,,,,,,,
+normalize,1. ,erste[rn]?,-,-,erster,1. ,,-1,-1
+,,,,,,,,,
+normalize,3.,dritte(..),-,-,dritter,3. ,,-1,-1
+normalize,4.,vierte(..),-,-,vierter,4. ,,-1,-1
+normalize,5.,fünfte(..),-,-,fünfter,5. ,,-1,-1
+normalize,6.,sechste(..),-,-,sechster,6. ,,-1,-1
+normalize,7.,siebte(..),-,-,siebter,7. ,,-1,-1
+normalize,8.,achte(..),-,-,achter,8. ,,-1,-1
+normalize,9.,neunte(..),-,-,neunter,9. ,,-1,-1
+normalize,10.,zehnte(..),-,-,zehnter,10. ,,-1,-1
+,,,,,,,,,
+normalize,"""$11$2""",($SEP)eins($SEP),-,-,""" eins """,""" 1 """,,-1,-1
+normalize,"""$12$2""",($SEP)zwei($SEP),-,-,""" zwei """,""" 2 """,,-1,-1
+normalize,"""$13$2""",($SEP)drei($SEP),-,-,""" drei """,""" 3 """,,-1,-1
+normalize,"""$14$2""",($SEP)vier($SEP),-,-,""" vier """,""" 4 """,,-1,-1
+normalize,"""$15$2""",($SEP)fünf($SEP),-,-,""" fünf """,""" 5 """,,-1,-1
+normalize,"""$16$2""",($SEP)sechs($SEP),-,-,""" sechs """,""" 6 """,,-1,-1
+normalize,"""$17$2""",($SEP)sieben($SEP),-,-,""" sieben """,""" 7 """,,-1,-1
+normalize,"""$18$2""",($SEP)acht($SEP),-,-,""" acht """,""" 8 """,,-1,-1
+normalize,"""$19$2""",($SEP)neun($SEP),-,-,""" neun """,""" 9 """,,-1,-1
+normalize,"""$110$2""",($SEP)zehn($SEP),-,-,""" zehn """,""" 10 """,,-1,-1
+normalize,"""$111$2""",($SEP)elf($SEP),-,-,""" elf """,""" 11 """,,-1,-1
+normalize,"""$112$2""",($SEP)zwölf($SEP),-,-,""" zwölf """,""" 12 """,,-1,-1
+,,,,,,,,,
+normalize,$1$2.,($SEP)<Do.|der|die> ($N).?,-,-,Do. 9.,"""9.""","Example ""the 8th"" => ""8th""",-1,-1
+normalize,,fällig_<bis>?,-,-,fällig bis,,"Example ""due by nov. 5""",-1,-1
+,,,,,,,,,
+normalize, $1,",_($YEAR)",-,-,", 2014",""" 2014""",,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,in $1,\+_($N),-,-,"""+5""",in 5,,-1,-1
+,,,,,,,,,
+,,Uhr,-,-,Uhr,,English only probably,-1,-1
+,,,,,,,,,
+normalize,$1 Tag $2,($EV) ($STIME)_$,-,-,immer um 14 Uhr,immer Tag um 14 Uhr,"Example ""every 2pm"" => ""every day 2pm""",-1,-1
+,,,,,,,,,
+normalize,15. $1,mitte_($MONTH),-,-,mitte Mai,15. Mai,"Example ""mid may""",-1,-1
+,,,,,,,,,
+normalize,jeden $1,(.+ $WEEKDAY)_<eines>?_$EV_Monats,-,-,-,-,"Example ""monday of every month""",-1,-1
+normalize,$1 $2 ab 1 $3 bis zum letzten Tag im $3,($EV) ($WEEKDAY) im ($MONTH),-,-,jeden Montag im Mai,jeden Montag ab 1 Mai bis zum letzten Tag im Mai ,"Example ""every monday of may""",-1,-1
+,$2 $3 ab $1,"($RDATE)[-\s,\.]*($EV|täglich)",-,-,"5. Mai, täglich",täglich ab 5. Mai,"Example: 5 may, every day",-1,-1
+,$2 $1,Monat_(<um>?_[^\s]+)?_am_<ersten>? ($N_$RS?_$WEEKDAY),-,-,jeden 4. Montag eines jeden Monats um 14 Uhr ,jeden 4. Montag um 14 Uhr,"Example ""every month at 14 on the 4th monday"" => ""every 4th monday at 14""",-1,-1
+,,,,,,,,,
+normalize,jeden?,jedes Jahr am,-,-,jedes Jahr am,jeden?,,-1,-1
+normalize,jeden?,jeden Monat am,-,-,jeden Monat am,jeden?,,-1,-1
+,$1 $2 ab,($EV) (.+) on,-,-,jeden Montag am 1. Oktober,jeden Montag am 1. Oktober,"Example ""every monday on 1st of october""",-1,-1
+,,,,,,,,,
+normalize,an jedem Werktag,an Wochentagen,an Werktagen,-,an Werktagen,an jedem Werktag,,-1,-1
+,$1 $2,($SEP)am (.+),-,-,""" am 5.""",""" 5.""",,-1,-1
+,,,,,,,,,
+normalize,$1,($STIME) um,-,-,"""9 Uhr um ""","""9 Uhr""",,-1,-1
+,,,,,,,,,
+normalize,$1 $2,($N)$SEP($MONTH),-,-,"""5. Mai""","""5. Mai""",,-1,-1
+normalize,$1 $2,($MONTH)$SEP($N),-,-,"""5. Mai""","""5. Mai""",,-1,-1
+,,,,,,,,,
+normalize,$2 $1,($N_$RS) ($EV),-,-,3. jeden,jeden 3.,,-1,-1
+,,,,,,,,,
+normalize,"""in 3 Stunden""",in wenigen Stunden,-,-,in wenigen Stunden,in 3 Stunden,,-1,-1
+normalize, $1,"_,_($STIME)",-,-,""", 15 Uhr""",""" 15 Uhr""",,-1,-1
+normalize,$1 ,"($STIME)_,_",-,-,"""15 Uhr, ""","""15 Uhr """,,-1,-1
+,,,,,,,,,
+normalize,Werktag,Mo.-Fr.,Mo.-Fr.,-,Mo.-Fr.,Werktag,,-1,-1
+,,,,,,,,,
+,$1 ,($MONTH) ,-,-,may the,"""Mai ""","Example ""march the 23rd""",-1,-1
+, $1,im ($MONTH),-,-,of may,""" Mai""","Example ""23rd of march""",-1,-1
+,,,,,,,,,
+normalize,Samstag,dieses Wochenende(..),<am|an> Wochenende(..),-,dieses Wochenende,Samstag,,-1,-1
+normalize,nächsten Samstag,nächst(..) Wochenende(..),-,-,nächsts Wochenende,nächsten Samstag,,-1,-1
+normalize,,folgener(..),,-,folgener,"""""",,-1,-1
+normalize,1. Jan. ,nächstes Jahr,-,-,nächstes Jahr,1. Jan. ,,-1,-1
+normalize,1. Januar,des Jahres,-,-,des Jahres,1. Januar,,-1,-1
+normalize, ,dieser Woche,diese Woche,-,dieser Woche,""" """,,-1,-1
+normalize,nächsten $1,($WEEKDAY) <der>?_nächs(..)_Woche,-,-,Montag nächster Woche,nächsten Montag,"Example ""monday of next week""",-1,-1
+normalize,1. ,nächsten? Monat(..),-,-,nächsten Monat,1. ,,-1,-1
+,,,,,,,,,
+,,,,,,,,,
+normalize,jeden letzten Werktag,<am>?_letzt(..)_Werktag_<eines>?_jeden(..) Mon(..),-,-,letzter Werktag eines jeden Monats,jeden letzten Werktag,,-1,-1
+normalize,an jedem Werktag,jeden Monat an Werktagen,monatlich an Werktagen,-,monatlich an Werktagen,an jedem Werktag,,-1,-1
+normalize,an jedem Werktag,^Werktag(..),-,-,werktags,an jedem Werktag,,-1,-1
+normalize,jeden Samstag,jedes Wochenend(..),^Wochenenden?,-,jedes Wochenende,jeden Samstag,,-1,-1
+,,,,,,,,,
+normalize,1. $1,<a<m|n>_>?<Anfang(..)> ($MONTH)$,-,-,am Anfang Mai,"""1. Mai""","Example ""at the beginning of may""",-1,-1
+normalize,am letzten Tag im  $1,Ende(..)_ ($MONTH)$,-,-,Ende Mai,"am letzten Tag im Mai""","Example ""at the end of may""",-1,-1
+,,,,,,,,,
+normalize,$1 nächsten $2,($EV) zweiten ($SWEEKDAY),-,-,jeden zweiten Montag,jeden nächsten Montag,"Example ""every other sunday"" => ""every next sunday""",-1,-1
+normalize,nächsten $1,zweiter ($SWEEKDAY),-,-,zweiter Montag,nächsten Montag,"Example ""other sunday"" => ""next sunday""",-1,-1
+,2 Wochen,nächste Woche,-,-,nächste Woche,2 Wochen,,-1,-1
+normalize,alles 2 Monate,($EV) <zweiten|nächsten> Monat,-,-,jeden zweiten Monat,alles 2 Monate,"Example ""every other months"" => ""every 2 months""",-1,-1
+,,,,,,,,,
+normalize,jeden,jährlich_<am|ab(..)>,-,-,jährlich ab,jeden,"Example ""anually beginning"", ""anually on""",-1,-1
+normalize,jeden,jährlich wiederholen<_ab>?,jährlich wiederholen_<ab(..>)?,-,jährlich wiederholen,jeden,,-1,-1
+normalize,jeden,jährlich_im,-,-,"""jährlich im Mai""","""jeden Mai""",,-1,-1
+,jährlich,jährlich,-,-,jährlich,jährlich,,-1,-1
+,,,,,,,,,
+,$1,bis ($WEEKDAY),-,-,bis Montag,Montag,"Example ""by monday""",-1,-1
+,$1,bis ($RDATE),-,-,bis 3. Mai,3. Mai,"Example ""by 3rd may""",-1,-1
+,nächsten,bis nächsten(..),-,-,bis nächsten,nächsten,,-1,-1
+,$1 um $2,($SEP)bis($SEP),-,-,bis heute um 15 Uhr,heute um 15 Uhr,"Example ""every monday by 2pm""",-1,-1
+,,,,,,,,,
+normalize,$1,wiederholen ($EV),-,-,wiederholen jeden,jeden,,-1,-1
+normalize,werktags,an_<$EV>?_Werktag(..) wiederholen,-,-,an jedem Werktag wiederholen,werktags,,-1,-1
+normalize,, des Monats,-,-,jeden 26 des Monats,jeden 26,,-1,-1
+normalize,jeden $1,jeden?\s+(.+),-,-,jeden Montag,jeden Montag,,-1,-1
+normalize,jeden,<täglich>?_wiederholen,-,-,täglich wiederholen,jeden,,-1,-1
+,,,,,,,,,
+normalize,letzten Tag,Ende_des Monats,-,-,Ende des Monats,letzten Tag,,-1,-1
+normalize,jeden letzten Tag,Ende_<eines>?_jeden Monats,-,-,Ende jeden Monats,jeden letzten Tag,,-1,-1
+,,,,,,,,,
+normalize,in 3 Tagen,in_wenigen Tagen,wenige Tage,-,in wenigen Tagen,in 3 Tagen,,-1,-1
+,,,,,,,,,
+,Wochen,Wochen,-,-,,,Common bad spellings (can omit) ,-1,-1
+,Freitag,Freitag,-,-,,,,-1,-1
+,heute,morgen,-,-,,,,-1,-1
+,morgen,morgen,-,-,,,,-1,-1
+,Montag,Montag,-,-,,,,-1,-1
+,jeden?,jd.,-,-,,,,-1,-1
+,werktags,wochentags,-,-,,,,-1,-1
+,heute,soon,-,-,,,,-1,-1
+,Do. ,Do.,-,-,,,,-1,-1
+,heute,sobald als möglich,-,-,,,,-1,-1
+,,,,,,,,,
+normalize,an jedem letzten Tag,letzter_<eines>?_jeden(..) Monats,-,-,-,-,,-1,-1
+normalize,an jedem 1. Tag,erster?_<eines>?_jeden(..) Monats,1._<eines>?_jeden(..) Monats,-,-,-,,-1,-1
+,,,,,,,,,
+normalize,$1 Monate ,($N)_mo\s,-,-,"""3mo ""","""3 Monate ""","Example ""3 mo""",-1,-1
+,,,,,,,,,
+normalize,"""bis +1 Woche""",für <eine> Woche?,-,-,-,-,"Example ""for one week""",-1,-1
+normalize,"""bis +$1 Woche""",für ($N) Wochen?,-,-,-,-,,-1,-1
+,,,,,,,,,
+,"""in $1 $2""",^($N) ($UNIT),-,-,3 tage,in 3 days,"Example ""3 days"" => ""in 3 days""",-1,-1
+,,,,,,,,,
+normalize,jeden Monat,einmal<_im_>?Monat,-,-,-,-,,-1,-1
+normalize,alle 15 Tage,zweimal<_im_>?Monat,-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize,$1,^($N$RS) Monat,-,-,3. Monat,"""3.""",,-1,-1
+,,,,,,,,,
+normalize,$1,\s+und? (Ende(..)),-,-,""" un Ende""",Ende,"Example "" and ending"" => "" ending""",-1,-1
+normalize,$1,\s+und? (Anfang(..)),-,-,""" un Anfang""",Anfang,"Example "" and starting"" => "" starting""",-1,-1
+normalize,", ",\s+und?\s+,",_und\s+",-,mon un tue,"mon, tue","Example "" and "" => "", """,-1,-1
+,,,,,,,,,
+normalize,mit Enddatum in $1 $2,für die nächsten? ($N) (Wochen?|Monate?|Tage?),-,-,für die nächsten 3 Wochen,mit Enddatum in 3 Wochen,,-1,-1
+normalize,mit Enddatum in $1 $2,für ($N) (Wochen?|Monate?|Tage?),-,-,für 3 Tage,mit Enddatum in 3 Tage,,-1,-1
+,,,,,,,,,
+normalize,bis in,mit Enddatum<_in>?,-,-,mit Enddatum in,bis in,,-1,-1
+,,,,,,,,,
+normalize,jeden tag enden $1 $2,^bis in ($N) (Wochen?|Monaten?|Tagen?),-,-,bis in 3 Wochen,jeden tag enden 3 Wochen,"Example ""ending in 3 weeks"" => ""every day ending in 3 week""",-1,-1
+,,,,,,,,,
+normalize,"$1 $2 $4, $3 $4","($EV) ($N_<$RS>?), ($N_<$RS>?) ($WEEKDAY)",-,-,-,-,"Example ""every 2nd, 3rd monday"" => ""every 2nd monday, 3rd monday""",-1,-1
+,,,,,,,,,
+normalize,jeden,jeden?_<an|am>?_jeden?,-,-,-,-,,-1,-1
+,,,,,,,,,
+normalize,jeden!$1,^nach($SEP),-,-,nach ,jeden!,,-1,-1
+,,,,,,,,,
+normalize,jeden Monat,monatlich,-,-,monatlich,jeden Monat,,-1,-1
+,,,,,,,,,
+normalize,um,am um,-,-,am um,um,,-1,-1
+,$1,am ($WEEKDAY),-,-,am Freitag,Freitag,"Example ""in 5 days""",-1,-1
+normalize, ,($SEP)am($SEP),-,-,am Freitag,Freitag,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,pm,p[.-]?m[.-]?,-,-,p.m.,pm,,-1,-1
+normalize,am,a[.-]?m[.-]?,-,-,a.m.,am,,-1,-1
+normalize,$1 pm$2,($N)_p(\s|$),-,-,3p,"""3 pm""","Example ""2p"" => ""2pm""",-1,-1
+normalize,$1 am$2,($N)_a(\s|$),-,-,3a,"""3 am""",,-1,-1
+normalize,$1,sharp($SEP),-,-,"""sharp """,""" ""","Example ""today at 2pm sharp""",-1,-1
+normalize,$1:$2$3,($N)-_($N)(am|pm),-,-,15:30 Uhr,"""15:30 Uhr""",,-1,-1
+,,,,,,,,,
+normalize,$1,in ($TIME),-,-,in 22.Uhr,22.Uhr,,-1,-1
+,,,,,,,,,
+normalize,"""+$1""",in\s+(\d+.+),-,-,in 5 Tagen,"""+5 Tagen""","Example ""in 5 days""",-1,-1
+,$1:$2 ,(\d+)\.(\d+)$,-,-,"""10.05""","""10:05""","Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize, ,$SEPdem$SEP,-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,vorher heute,vorher$,-,-,-,-,"Example ""in 5 days""",-1,-1
+normalize,nach heute,nach$,-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,jeden tag ab $1,"(.+), jeden Tag$",-,-,-,-,"Example ""in 5 days""",-1,-1
+normalize,jeden $1,(.+) jährlich$,-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,jeden letzten Tag,Ende jedes Monats,-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+,am $1,bis ($TIME),-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,$1,^bis (.+),-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,$1,^anfang (.+),-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,"""+3 $1""",in ein(..) paar ($UNIT),-,-,-,-,"Example ""in 5 days""",-1,-1
+,,,,,,,,,
+normalize,2. ,zweite(..),-,-,zweiter,2. ,,-1,-1
+,,,,,,,,,
+normalize,$1 $2:$3,($SEP_um|am|@)_(\d\d)(\d\d),-,-,um 2300,um 23:00,,-1,-1
+,,,,,,,,,
+normalize,,"^[\.,!;]+",-,-,,,,-1,-1
+normalize,$1,"([a-zA-z]+)_[\.,!;-]+$",-,-,,,,-1,-1
+,,,,,,,,,
+normalize,Januar,Jänner,-,-,,,,-1,-1
+,,,,,,,,,
+normalize,,^@_.+,-,-,@home,,,-1,-1
+,,,,,,,,,
+normalize,"""+2 tage""",<Ü|ü>bermorgen,-,-,Übermorgen,"""+2 tage""",,-1,-1
+,,,,,,,,,
+normalize,$1/$2$3,($SEP[0-9]+)\.([0-9]+)\.?($SEP),-,-,"""5.5""","""5/5""",,-1,-1

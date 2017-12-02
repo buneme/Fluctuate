@@ -1,0 +1,159 @@
+TYPE,HANDLER,PATTERN1,PATTERN2,PATTERN3,EXAMPLE1,EXAMPLE2
+,,,,,,
+helper,$AMPM,<am|pm|早上|中午|下午|晚上|凌晨|上午>,-,-,早上,-
+helper,$TIME,"<@|的|中午>_$AMPM?_\d{1,2}<[点:\.\s.]\d{1,2}>?<点|起>?_$AMPM?","<@|的|中午>?_$AMPM_\d{1,2}<[点:.]\d{1,2}>?<点|起>?_$AMPM?","<@|的|中午>?_$AMPM?_\d{1,2}<点|[:\.点.]\d{1,2}点?><点|起>?_$AMPM?",的下午3点,-
+helper,$AT,<的|@|中午>_,-,-,的,@
+helper,$XTIME,"(\d{1,2})([点:\.\s](\d{1,2}))?",-,-,"""2""",-
+,,,,,,
+helper,$MONTH,1月|2月|3月|4月|5月|6月|7月|8月|9月|10月|11月|12月,-,-,1月,2月
+helper,$WEEKDAY,<<周|星期|礼拜><一|1>|<周|星期|礼拜><二|2>|<周|星期|礼拜><三|3>|<周|星期|礼拜><四|4>|<周|星期|礼拜><五|5>|<周|星期|礼拜><六|6>|<周|星期|礼拜><日|天|7>>,-,-,周一,周三
+helper,$YEAR,[0-9][0-9][0-9][0-9],-,-,"""2004""",-
+helper,$EV,<每!?|每个|重复?|每月|每隔|每天|每個>,-,-,每个,每个
+helper,$RS,-,-,-,-,-
+helper,$N,"<[0-9]{1,4}|一|二|三|四|五|六|七|八|九|日>",-,-,九,"""23"""
+helper,$RN,[0-9]?[0-9],-,-,"""2""",-
+helper,$SEP,[-/.\s]+,-,-,,
+helper,$UNIT,<小时?|天|周|月|年|星期>,-,-,小时,年
+helper,$AND,"<,|和>",,,和,-
+,$START,自(...)起,,,自(.+)起,
+helper,$ENDING,至(..),,,至,-
+helper,$BEFORE,<之?前>,,,之前,-
+helper,$AFTER,<之?后|自>,,,之后,-
+,,,,,,
+helper,$U-YEARS,<年|每年>,,,每年,年
+helper,$U-MONTHS,<个月|每月>,,,个月,
+helper,$U-WEEKS,每周,,,每周,
+helper,$U-DAYS,<天|每天>,,,每天,-
+helper,$U-HOURS,<小时?|每小时>,,,每小时,小时
+helper,$U-NEXT,<下1个|下一个|隔|下>,,,下一个,-
+helper,$U-OTHER,隔(..)个,,,-,-
+helper,$U-OF,的?,,,的,-
+helper,$U-IN,内?,,,内,-
+helper,$R-IN,-,,,-,-
+helper,$U-LAST,<底|结束|最后的|最后<1|一><个|天|日|月>|最后>,,,结束,-
+helper,$U-WORKDAYS,工作日,,,工作日,工作日
+,,,,,,
+composite,"{""type"": ""start_end"", ""date"": ""$1"", ""start_date"": ""$2"", ""end_date"": ""$3""}",(.+) 自(.+)起_$AND?_至 (.+),-,-,每天自明天起至六个月,每天自明天起至六个月
+,,,,,,
+composite,"{""type"": ""starting"", ""date"": ""$1"", ""start_date"": ""$2""}",(.+)_$AND?_自(.+)起,-,-,每天自明天起,-
+composite,"{""type"": ""starting"", ""date"": ""$1"", ""start_date"": ""$2""}",(.+)_$AND?_日的(.+),-,-,每月14日的4星期一,-
+composite,"{""type"": ""starting"", ""date"": ""$2"", ""start_date"": ""$1""}",自(.+)起_$AND?_(.+),-,-,自12月10日起每天,-
+,,,,,,
+composite,"{""type"": ""ending"", ""date"": ""$1"", ""end_date"": ""$2""}",(.+)_$AND?_至 (.+),-,-,每天至6个月,-
+composite,"{""type"": ""ending"", ""date"": ""$2"", ""end_date"": ""$1""}",(.+)_内_$AND?_(.+),-,-,6个月内每天,-
+,,,,,,
+composite,"{""type"": ""before_after"", ""number"": ""$2"", ""unit"": ""$3"", ""mod"": ""before"", ""rel_date"": ""$1""}",(.+)_之前的?_($N)($UNIT)_内?,-,-,3月3日之前的三天内,-
+composite,"{""type"": ""before_after"", ""number"": ""$2"", ""unit"": ""$3"", ""mod"": ""after"", ""rel_date"": ""$1""}",(.+)_之后的?_($N)($UNIT)_内?,-,-,4月2日之后的五天内,-
+composite,"{""type"": ""starting"", ""date"": ""$2"", ""start_date"": ""$1""}",($MONTH)里?的($EV $WEEKDAY),-,-,1月里的每周3,5月的每个周一
+,,,,,,
+recurring,"{""type"": ""every_comma"", ""patterns"": ""$1"", ""time"": ""$2""}","$EV ([^,]+,.+)_($TIME)?",-,-,"每5,6的下午3点","每周一,周二"
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",$EV ($N)_$U-YEARS,-,-,每三年,-
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",$EV ($N)?_$U-YEARS_<重复>?,-,-,每年,-
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",($N)?_$U-YEARS,-,-,每年,2年
+,,,,,,
+,"{""type"": ""every_spec_month"", ""number"": ""$2"", ""month"": ""$1""}",$EV ($MONTH)_($N)_日?,-,-,每个4月3日,-
+,"{""type"": ""every_month"", ""number"": ""2""}",$EV隔($N)_$U-MONTHS,-,-,每隔一个月,-
+,,,,,,
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",$EV月_($N)_日,-,-,每月5日,-
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+recurring,"{""type"": ""every_last_work_day"", ""month"": ""$1""}",$U-LAST_$U-WORKDAYS_$EV ($MONTH)?,-,-,最后一个工作日每个5月,-
+recurring,"{""type"": ""every_last_work_day"", ""month"": ""$1""}",$EV ($MONTH)_$U-LAST_$U-WORKDAYS,-,-,每个5月最后一个工作日,
+,,,,,,
+recurring,"{""type"": ""every_day_month"", ""number1"": ""$1"", ""number2"": ""$2""}",$EV ($N)$SEP($N),-,-,每个5/5,-
+,,,,,,
+,,,,,,
+recurring,"{""type"": ""every_other_day""}",隔日,-,-,隔日,-
+,,,,,,
+recurring,"{""type"": ""every_next_weekday"", ""weekday"": ""$1""}",$EV $U-NEXT ($WEEKDAY),-,-,每下周一,-
+,,,,,,
+,,,,,,
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$2"", ""month"": ""$1""}",$EV ($MONTH)_$U-LAST_($WEEKDAY),-,-,每个5月最后一个周一,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$EV $U-LAST_($WEEKDAY),-,-,每月最后一个周五,-
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$3"", ""month"": ""$1""}",$EV ($MONTH)_$U-OF_第_($N)个?_($WEEKDAY),-,-,每个5月第三个周一,-
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY) ($TIME),-,-,每周一下午12点,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",$EV 月?_第_($N)_个_($WEEKDAY),-,-,每月第三个周一,每月第2个周5
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY),-,-,每周一,每周二
+,"{""type"": ""every_spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",$EV ($N)_$RS?_($WEEKDAY),-,-,每月第三个周一,-
+,"{""type"": ""every_spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$1"", ""month"": ""$3""}",$EV ($WEEKDAY)_($N)_$RS?_$U-IN_($MONTH),-,-,每周一5月第三个,-
+,,,,,每天自明天起至六个月,
+recurring,"{""type"": ""every_spec_month"", ""number"": ""$2"", ""month"": ""$1""}",$EV ($MONTH) ($N)_日,-,-,每4月2日,-
+,"{""type"": ""every_month"", ""number"": ""2""}",$EV 隔<一|1>个月,-,-,每隔一个月,-
+recurring,"{""type"": ""every_month"", ""number"": ""$1""}",$EV ($N)?_$U-MONTHS,-,-,每二个月,每隔一个月
+,,,,,,
+,,,,,,
+recurring,"{""type"": ""every_hour"", ""number"": ""$1""}",$EV ($N)?_$U-HOURS,-,-,每三小时,-
+,,,,,,
+recurring,"{""type"": ""every_other_week_day""}",每隔工作日,-,-,每隔工作日,-
+,,,,,,
+recurring,"{""type"": ""every_last_day"", ""month"": ""$1""}",$EV ($MONTH)_$U-OF_$U-LAST,-,-,每个4月底,
+recurring,"{""type"": ""every_last_day"", ""month"": ""$1""}",$EV ($MONTH)_$U-OF_$U-LAST_$U-DAYS?,-,-,每个4月最后一天,-
+recurring,"{""type"": ""every_last_day"", ""month"": ""$1""}",$EV ($MONTH)_$U-OF_$U-LAST_$EV_?,-,-,每4月最后,-
+recurring,"{""type"": ""every_last_day"", ""month"": """"}",$EV <$U-MONTHS|月>_$U-OF_$U-LAST_<工作日>?,-,-,每月底,每月最后一个工作日
+recurring,"{""type"": ""every_day"", ""number"": ""$1""}",$EV ($N)?_天,-,-,每三天,-
+recurring,"{""type"": ""every_day"", ""number"": ""1""}",每个$,-,-,每个,-
+recurring,"{""type"": ""every_week"", ""number"": ""2""}",$EV 隔<一|1>周,-,-,每隔一周,
+recurring,"{""type"": ""every_week"", ""number"": ""$1""}",$EV 月?第?($N)?周,-,-,每月第3周,每周
+recurring,"{""type"": ""every_week_day"", ""number"": ""$1""}",$EV $U-MONTHS?_$U-OF_第?($N)?_个?_$U-WORKDAYS,-,-,每月第3个工作日,每个工作日
+recurring,"{""type"": ""every_week_day"", ""number"": ""1""}",$EV 月_$U-OF_$EV_$U-WORKDAYS,-,-,每月每个工作日,-
+,,,,,,
+,,,,,,
+date,"{""type"": ""every_spec_day"", ""number"": ""1""}",每月初,-,-,每月初,-
+date,"{""type"": ""every_month"", ""number"": """"}",每月<$N次>?,-,-,每月,-
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",$EV ($N),-,-,每三,-
+,,,,,,
+recurring,"{""type"": ""comma"", ""patterns"": ""$1"", ""time"": ""$2""}","([^,]+,.+)_($TIME)?",-,-,"周一,周二",
+,,,,,,
+date,"{""type"": ""today""}",今天,今,-,今天,-
+date,"{""type"": ""tomorrow""}",明天,明,-,明天,-
+date,"{""type"": ""yesterday""}",昨天,昨,-,昨天,-
+,,,,,,
+date,"{""type"": ""last_work_day"", ""month"": ""$1""}",($MONTH)?_$U-OF_$U-LAST_$U-WORKDAYS,-,-,5月最后一个工作日,-
+,,,,,,
+,,,,,,
+date,"{""type"": ""other_work_day""}",隔_$N_个?_$U-WORKDAYS,其他工作日,-,隔一个工作日,-
+date,"{""type"": ""work_day""}",$U-WORKDAYS,-,-,工作日,-
+date,"{""type"": ""next_weekday"", ""weekday"": ""$1""}",$U-NEXT_$U-OF_($WEEKDAY),-,-,下周一,下1个周3
+,,,,,,
+,"{""type"": ""spec_weekday_month"", ""number"": ""$1"", ""weekday"": ""$2"", ""month"": ""$3""}",($N)_$RS?_($WEEKDAY)_$U-IN_($MONTH),-,-,第三个周一5月,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$2"", ""month"": ""$1""}",($MONTH)_$U-OF_$U-LAST_($WEEKDAY),-,-,5月最后一个周一,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$3"", ""month"": ""$1""}",($MONTH)_$U-OF_第_($N)_个?_($WEEKDAY),-,-,5月第三个周一,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($WEEKDAY)_<$TIME>,-,-,周一下午3点,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",<$TIME>_($WEEKDAY),-,-,下午3点周一,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",第_($N)个?_($WEEKDAY),-,-,第三个周一,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$2"", ""weekday"": ""$1""}",($WEEKDAY)_第_($N)个?,-,-,周一第三个,-
+date,"{""type"": ""spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$U-LAST_$U-OF_($WEEKDAY),-,-,最后一个周一,-
+,,,,,,
+date,"{""type"": ""last_day"", ""month"": ""$1""}",($MONTH)_$U-OF_$U-LAST,-,-,5月最后,-
+date,"{""type"": ""last_day"", ""month"": ""$1""}",($MONTH)?_$U-OF_$U-LAST_$U-DAYS?,-,-,5月最后一日,11月的最后一天
+date,"{""type"": ""last_day"", ""month"": """"}",^月底,-,-,月底,
+date,"{""type"": ""spec_day"", ""number"": ""1""}",^月初,-,-,月初,
+,,,,,,
+date,"{""type"": ""date_x_forced"", ""year"": ""$1"", ""number1"": ""$2"", ""number2"": ""$3""}",($YEAR)年?$SEP($RN)月?$SEP($RN)日?,-,-,"""2014/5/5""",-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$2"", ""month"": ""$3""}",($YEAR)年_($N) 日 ($MONTH),-,-,2014年3日5月,-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$3"", ""month"": ""$2""}",($YEAR)年_($MONTH) ($N)日,-,-,2014年5月3日,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$1"", ""month"": ""$2""}",($N)日_($MONTH) ($YEAR)年?,-,-,3日5月2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$1"", ""month"": ""$2""}",($N)日($MONTH),-,-,3日5月,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$2"", ""month"": ""$1""}",($MONTH)_($N)日 ($YEAR)年?,-,-,5月3日2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$2"", ""month"": ""$1""}",($MONTH)_($N)日,-,-,5月3日,-
+,,,,,,
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)日?$SEP($RN)月?<$SEP($YEAR)?年?>,-,-,"""5/5/2014""",-
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)日?$SEP($RN)月<$SEP($YEAR)?年?>?,-,-,"""5日/5月""",-
+date,"{""type"": ""date_month"", ""month"": ""$1""}",($MONTH),-,-,1月,-
+,"{""type"": ""date_month"", ""month"": ""$1""}",$U-OF ($MONTH),-,-,1月,-
+,,,,,,
+,"{""type"": ""no_date""}",无日期|无截止日,-,-,无日期,无截止日
+date,"{""type"": ""minus"", ""number"": ""-$1"", ""unit"": ""$2""}",\+?($N)($UNIT)前<内|之后>?,-,-,2天前,-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",\+($N)($UNIT|日)<内|之后>?,-,-,"""+2日""",-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",的($N)($UNIT|日)<内|之后>?,-,-,的5日内,-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",<\+>?($N) 个? ($UNIT) <后|内|之后>?,-,-,2个月内,1星期
+,,,,,,
+date,"{""type"": ""minus"", ""number"": ""$1"", ""unit"": ""$2""}",(\-$N) 个? ($UNIT) <前|内>?,-,-,-2天前,-
+,,,,,,
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($WEEKDAY),-,-,周一,-
+date,"{""type"": ""spec_day"", ""number"": ""$1""}",第_($N),-,-,第三,-
+date,"{""type"": ""spec_day"", ""number"": ""$1""}",($N)日,-,-,8日,-
+,,,,,,
+date,"{""type"": ""time""}",<$TIME>,-,-,下午2点,-

@@ -1,0 +1,123 @@
+TYPE,HANDLER,PATTERN1,PATTERN2,PATTERN3,EXAMPLE1,EXAMPLE2
+,,,,,,
+helper,$TIME,"<@|o>_\d{1,2}<[:\.\s]\d{1,2}>?_<am|pm>?","<@|o>?_\d{1,2}<[:.]\d{1,2}>?_<am|pm>","<@|o>?_\d{1,2}[:]\d{1,2}_<am|pm>?",o 15:00,"""3:30:00"""
+helper,$AT,<o|przed|@>_,-,-,o,@
+helper,$XTIME,"(\d{1,2})([:\.\s](\d{1,2}))?",-,-,"""2""",-
+,,,,,,
+helper,$SMONTH,<styczeń|styczna|luty|lutego|marzec|marca|kwiecie<ń|n>|kwietnia|maj|maja|czerwiec|czerwca|lipiec|lipca|sierpie<ń|n>|sierpnia|wrzesie<ń|n>|wrze<s|ś>nia|pa<ź|z>dziernik|pa<z|ź>dziernika|listopad|grudzie<ń|n>|grudnia>,,-,styczeń,
+helper,$MONTH,<stycz(..)|luty|lutego|marzec|marca|kwiecie<ń|n>|kwietnia|maj|maja|czerwiec|czerwca|lipiec|lipca|sierpie<ń|n>|sierpnia|wrzesie<ń|n>|wrze<s|ś>nia|pa<ź|z>dziernik|pa<z|ź>dziernika|list(..)|grudzie<ń|n>|grudnia>,<st(..)|lut(..)|mar(..)|kw(..)|maj(..)|cze(..)|lip(..)|sie(..)|wrz(..)|pa<z|ź>(..)|lis(..)|gr(..)>\.?,-,styczeń,lut
+helper,$WEEKDAY,<poniedzia<ł|l>ek|wtorek|<ś|s>roda|czwartek|pi<ą|a>tek|pi<ą|a>tku|sobota|niedziela>,<pn|pon(..)|wt(..)|<ś|s>r(..)|czw(..)|pt|sb|sob(..)|nd|niedz(..)>\.?,-,poniedziałek,wt
+helper,$SWEEKDAY,<poniedzia<ł|l>ek|wtorek|<ś|s>roda|czwartek|pi<ą|a>tek|pi<ą|a>tku|sobota|niedziela>,<pon|wt|śr|czw|pt|sob|nb|niedz(..)|poniedzia<ł|l>ki|wtorki|<ś|s>rody|czwartki|pi<a|ą>tki|soboty|niedziele>,-,poniedziałek,wt
+helper,$YEAR,[0-9][0-9][0-9][0-9],-,-,"""2004""",-
+helper,$EV,<w ka<ż|z>d(..)|ka<ż|z>d(..)|powtarza(..)|zawsze(..)|co>!?,-,-,każdy,każdy
+helper,$RS,<go|-go>,-,-,go,-
+helper,$N,"<[0-9]{1,4}|pierwsz(..)|jeden|dwa|drug(..)|trzy|trzeci(..)|cztery|czwart(..)|piec|pięć|piąty|piaty|pi<ą|>tego|szesc|sześć|szost(..)|szóst(..)|siedem|siódm(..)|siodm(..)|osiem|osm(..)|ósm(..)|dziewiec|dziewięć|dziewi(..)|dziesiec|dziesięć|dziesi(..)>",-,-,dziewięć,"""23"""
+helper,$RN,[0-9]?[0-9],-,-,"""2""",-
+helper,$SEP,[-/.\s]+,-,-,,
+helper,$UNIT,<godz(..)|<dni|dzie(..)>|tygodn(..)|tydzie(..)|tyg|miesi<ące?|ęcy|ace?|ecy>|<lata?|rok>>,-,-,godzin,rok
+helper,$AND,"<,|i|oraz>",,,oraz,-
+helper,$START,<zacz(..)|start|od>,,,zaczynając,start
+helper,$ENDING,<ko<n|ń>(..)|do|przez>,,,kończąc,-
+helper,$BEFORE,przed,,,przed,-
+helper,$AFTER,<po|od>,,,po,-
+,,,,,,
+helper,$U-YEARS,<co>?_<rok(..)|lata?>,,,co rok,rok
+helper,$U-MONTHS,<co>?_<miesi(..)>,,,co miesiąc,miesiąc
+helper,$U-WEEKS,<co>?_<tydzie(..)|tygodnie?>,,,co tydzień,tydzień
+helper,$U-DAYS,<dzi(..)|dni(..)|dni>,,,dziennie,dzień
+helper,$U-WORKDAYS,<dni(..)|dni|dzi(..)> <robocz<y|e>|pracy|powszedni>,,,dzień roboczy,dzień roboczy
+helper,$U-HOURS,<godzina|godziny?|co_godz(..)>,,,godzinowo,godzina
+helper,$U-NEXT,<nast(..)|co drugi>,,,następny,-
+helper,$U-OTHER,<co>?_<drugi|2>,,,drugi,-
+,$U-OF,<of>?,,,,-
+helper,$U-IN,<w>?,,,w,-
+helper,$R-IN,<w|za>,,,za,-
+helper,$U-LAST,ostat(..),,,ostatni,-
+,,,,,,
+,,,,,,
+composite,"{""type"": ""start_end"", ""date"": ""$1"", ""start_date"": ""$2"", ""end_date"": ""$3""}",(.+)$AND? $START (.+)_$AND?_$ENDING (.+),-,-,codziennie zaczynając jutro i kończąc za 6 miesięcy,-
+composite,"{""type"": ""starting"", ""date"": ""$1"", ""start_date"": ""$2""}",(.+)_$AND?_$START (.+),-,-,codziennie od jutra,-
+composite,"{""type"": ""ending"", ""date"": ""$1"", ""end_date"": ""$2""}",(.+)_$AND?_$ENDING (.+),-,-,"codziennie, koniec za 6 miesięcy",-
+composite,"{""type"": ""before_after"", ""number"": ""$1"", ""unit"": ""$2"", ""mod"": ""before"", ""rel_date"": ""$3""}",<\+|za >?($N) ($UNIT) $BEFORE_(.+)?,-,-,3 dni przed 3 marca,-
+composite,"{""type"": ""before_after"", ""number"": ""$1"", ""unit"": ""$2"", ""mod"": ""after"", ""rel_date"": ""$3""}",<\+|za >?($N) ($UNIT) $AFTER_(.+)?,-,-,5 dni po 2 marca,-
+,,,,,,
+recurring,"{""type"": ""every_comma"", ""patterns"": ""$1"", ""time"": ""$2""}","$EV ([^,]+,.+)_($TIME)?",-,-,"każdego 5, 6 o 15:00","każdy pn, wt"
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",$EV_($N)?_$U-YEARS,-,-,co 3 lata,-
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",($N)?_$U-YEARS,-,-,2 lata,-
+,,,,,,
+recurring,"{""type"": ""every_month"", ""number"": ""$1""}",$EV_($N)?_$U-MONTHS,-,-,co 2 miesiące,-
+recurring,"{""type"": ""every_spec_month"", ""number"": ""$1"", ""month"": ""$2""}",$EV_($N)_($MONTH),-,-,każdego 2 kwietnia,-
+recurring,"{""type"": ""every_spec_month"", ""number"": ""$2"", ""month"": ""$1""}",$EV ($MONTH)_($N),-,-,zawsze kwietnia 3,-
+,,,,,,
+recurring,"{""type"": ""every_last_work_day"", ""month"": ""$1""}",$EV $U-LAST_$U-WORKDAYS_($MONTH)?_$U-IN?_$U-MONTHS?,-,-,każdy ostatni dzień roboczy maja,każdy ostatni dzień pracy
+recurring,"{""type"": ""every_last_day"", ""month"": ""$1""}",$EV $U-LAST_$U-DAYS_($MONTH)?_$U-IN?_$U-MONTHS?,-,-,każdy ostatni dzień kwietnia,każdy ostatni dzień miesiąca
+,,,,,,
+recurring,"{""type"": ""every_other_week_day""}",$EV $U-OTHER $U-WORKDAYS,-,-,zawsze co drugi dzień roboczy,-
+recurring,"{""type"": ""every_other_day""}",$EV $U-OTHER_$U-DAYS,-,-,zawsze co drugi dzień,-
+,,,,,,
+recurring,"{""type"": ""every_week_day"", ""number"": ""$1""}",$EV_($N)?_$U-WORKDAYS,-,-,każdy trzeci dzień roboczy,każdy dzień roboczy
+recurring,"{""type"": ""every_week"", ""number"": ""$1""}",$EV_($N)?_$U-WEEKS,-,-,co trzeci tydzień,co tydzień
+,,,,,,
+recurring,"{""type"": ""every_day_month"", ""number1"": ""$1"", ""number2"": ""$2""}",$EV ($N)$SEP($N),-,-,każdy 5/5,-
+,,,,,,
+recurring,"{""type"": ""every_next_weekday"", ""weekday"": ""$1""}",$EV $U-NEXT ($WEEKDAY),-,-,zawsze co drugi poniedziałek,-
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",($N)_$EV $U-MONTHS,-,-,piąty każdego miesiąca,-
+,,,,,,
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""$1"", ""weekday"": ""$2"", ""month"": ""$3""}",$EV ($N)_($WEEKDAY)_$U-IN_($MONTH),-,-,każdy trzeci poniedziałek w maju,-
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$1"", ""month"": ""$3""}",$EV ($WEEKDAY)_($N)_$RS?_$U-IN_($MONTH),-,-,każdy poniedziałek trzeci w maju,-
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY) ($TIME)_$U-IN?_$U-MONTHS?,-,-,każdy pn o 12:00,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""$2"", ""weekday"": ""$1""}",$EV ($WEEKDAY)_($N)_$U-IN?_$U-MONTHS?,-,-,każdy poniedziałek trzeci,-
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY)_$U-IN?_$U-MONTHS?,-,-,każdy pn,każdy wtorek
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$1"", ""month"": ""$2""}",$EV $U-LAST_($WEEKDAY)_$U-IN_($MONTH),-,-,każdy ostatni poniedziałek w maju,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",$EV_($N)_($WEEKDAY)_$U-IN?_$U-MONTHS?,-,-,każdy trzeci poniedziałek,w każdy 4 poniedziałek miesiąca
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$EV $U-LAST_($WEEKDAY)_$U-IN?_$U-MONTHS?,-,-,każdy ostatni poniedziałek,-
+,,,,,,
+recurring,"{""type"": ""every_hour"", ""number"": ""$1""}",$EV_($N)?_$U-HOURS,-,-,co 3 godziny,-
+,,,,,,
+recurring,"{""type"": ""every_day"", ""number"": ""$1""}",$EV ($N)?_$U-DAYS,-,-,co 3 dni,-
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",$EV ($N)_$UNIT?_$U-MONTHS?,-,-,każdy trzeci,każdego 5 dzień miesiąca
+,,,,,,
+,,,,,,
+recurring,"{""type"": ""comma"", ""patterns"": ""$1"", ""time"": ""$2""}","([^,]+,.+)_($TIME)?",-,-,"pn,wt",
+,,,,,,
+date,"{""type"": ""today""}",dzi<ś|s>,dzisiaj,-,dziś,-
+date,"{""type"": ""tomorrow""}",jutroo?,-,-,jutro,-
+date,"{""type"": ""yesterday""}",wczoraj,-,-,wczoraj,-
+,,,,,,
+,,,,,,
+date,"{""type"": ""last_work_day"", ""month"": ""$1""}",$U-LAST $U-WORKDAYS_($MONTH)?,-,-,ostatni dzień roboczy maja,-
+date,"{""type"": ""last_day"", ""month"": ""$1""}",$U-LAST $U-DAYS_($MONTH)?,-,-,ostatni dzień maja,-
+date,"{""type"": ""other_work_day""}",drugi $U-WORKDAYS,-,-,drugi dzień roboczy,-
+date,"{""type"": ""work_day""}",$U-WORKDAYS,-,-,dzień roboczy,-
+date,"{""type"": ""next_weekday"", ""weekday"": ""$1""}",$U-NEXT ($WEEKDAY),-,-,następny poniedziałek,-
+,,,,,,
+date,"{""type"": ""spec_weekday_month"", ""number"": ""$1"", ""weekday"": ""$2"", ""month"": ""$3""}",($N)_($WEEKDAY)_$U-IN_($MONTH),-,-,trzeci poniedziałek w maju,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$1"", ""month"": ""$3""}",($WEEKDAY)_($N)_$RS?_$U-IN_($MONTH),-,-,poniedziałek trzeci w maju,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$1"", ""month"": ""$2""}",$U-LAST_($WEEKDAY)_$U-IN_($MONTH),-,-,ostatni poniedziałek w maju,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($WEEKDAY) <$TIME>,-,-,poniedziałek 15:00,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",<$TIME> ($WEEKDAY),-,-,15:00 poniedziałek,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",($N)_ ($WEEKDAY),-,-,trzeci poniedziałek,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$2"", ""weekday"": ""$1""}",($WEEKDAY) ($N),-,-,poniedziałek trzeci,-
+date,"{""type"": ""spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$U-LAST_($WEEKDAY),-,-,ostatni poniedziałek,-
+,,,,,,
+date,"{""type"": ""date_x_forced"", ""year"": ""$1"", ""number1"": ""$2"", ""number2"": ""$3""}",($YEAR)$SEP($RN)$SEP($RN),-,-,"""2014/5/5""",-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$2"", ""month"": ""$3""}",($YEAR)$SEP($N)_($MONTH),-,-,2014 3 maja,-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$3"", ""month"": ""$2""}",($YEAR)_($MONTH)_($N),-,-,2014 maj 3,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$1"", ""month"": ""$2""}",($N)_($MONTH)_($YEAR),-,-,3 maja 2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$1"", ""month"": ""$2""}",($N)_($MONTH),-,-,3 maja,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$2"", ""month"": ""$1""}",($MONTH)_($N)_($YEAR),-,-,maj 3 2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$2"", ""month"": ""$1""}",($MONTH) ($N),-,-,maja 3,-
+date,"{""type"": ""spec_day"", ""number"": ""1""}",<nast(..) miesi(..)|w 1 dzień>,przys(..) miesi(..),-,następny miesiąc,-
+,,,,,,
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)$SEP($RN)<$SEP($YEAR)>,-,-,"""5/5/2014""",-
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)[-/]($RN)<[-/]($YEAR)?>?,-,-,"""5/5""",-
+date,"{""type"": ""date_month"", ""month"": ""$1""}",($SMONTH),-,-,styczeń,-
+,,,,,,
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",$R-IN_($N)_($UNIT),-,-,za 2 miesiące,-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",\+_(\d\d?)_($UNIT)?,-,-,"""+2 tyg""",-
+date,"{""type"": ""minus"", ""number"": ""$1"", ""unit"": ""$2""}",(\-$N)_($UNIT)?,-,-,-2 dni,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($SWEEKDAY)$,-,-,poniedziałek,piątku
+,,,,,,
+date,"{""type"": ""time""}",<$TIME>$,-,-,"""14:00""",-
+,,,,,,
+date,"{""type"": ""no_date""}",bez terminu|bez daty,-,-,bez daty,bez terminu

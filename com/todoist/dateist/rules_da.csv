@@ -1,0 +1,120 @@
+TYPE,HANDLER,PATTERN1,PATTERN2,PATTERN3,EXAMPLE1,EXAMPLE2
+,,,,,,
+helper,$TIME,"<@|kl\.?>_\d{1,2}<[:\s]\d{1,2}>?_<am|pm>?","<@|kl\.?>?_\d{1,2}<:\d{1,2}>?_<am|pm>","<@|kl\.?>?_\d{1,2}[:]\d{1,2}_<am|pm>?",kl 3pm,"""3:30:00 AM"""
+helper,$AT,<kl\.?|@>_,-,-,kl 3pm,@
+helper,$XTIME,"(\d{1,2})([:\s](\d{1,2}))?",-,-,"""2""",-
+,,,,,,
+helper,$SMONTH,<januar|februar|marts|april|maj|juni|juli|august|september|oktober|november|december>,,-,januar,
+helper,$MONTH,<januar|februar|marts|april|maj|juni|juli|august|september|oktober|november|december>,<jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec>\.?,-,januar,feb
+helper,$WEEKDAY,<mandag|tirsdag|onsdag|torsdag|fredag|lørdag|søndag>,<man|tir|ons|tor|fre|lør|søn>\.?,-,mandag,ons
+helper,$YEAR,[0-9][0-9][0-9][0-9],-,-,"""2004""",-
+helper,$EV,hv(..),-,-,hver,-
+helper,$RS,\.,-,-,.,-
+helper,$N,"<[0-9]{1,4}|en|to|tre|fire|fem|seks|syv|otte|ni|ti>",-,-,ni,"""23"""
+helper,$RN,<[0-9]?[0-9]|en|to|tre|fire|fem|seks|syv|otte|ni|ti>,-,-,"""2""",-
+helper,$SEP,[-/.\s]+,-,-,,
+helper,$UNIT,<timer?|dage?|uger?|måned<er>?|år>,-,-,timer,år
+helper,$AND,"<,|og>",,,og,","
+helper,$START,star(..),,,starter,start
+helper,$ENDING,<end(..)|slutter>,,,ender,slutter
+helper,$BEFORE,før,,,før,-
+helper,$AFTER,efter,,,efter,-
+,,,,,,
+helper,$U-YEARS,<år|årligt>,,,år,årligt
+helper,$U-MONTHS,<måned(..)>,,,månedligt,-
+helper,$U-WEEKS,<uge(..)>,,,ugeligt,uge
+helper,$U-DAYS,<dag(..)>,,,dagligt,daglig
+helper,$U-HOURS,<time(..)>,,,time,-
+helper,$U-NEXT,næste,,,næste,-
+helper,$U-OTHER,anden,,,anden,-
+helper,$U-OF,<af|i>?,,,af,-
+helper,$U-IN,<i|om>?,,,i,om
+helper,$R-IN,i|om,,,i,om
+helper,$U-LAST,sidste?,,,sidste,-
+helper,$U-WORKDAYS,<arbejds?_dage?|hverdage?>,,,arbejdsdage,arbejdsdag
+,,,,,,
+composite,"{""type"": ""start_end"", ""date"": ""$1"", ""start_date"": ""$2"", ""end_date"": ""$3""}",(.+) $START (.+)_$AND?_$ENDING (.+),-,-,hver dag starter imorgen og ender om 6 måneder,hver dag starter imorgen slutter om 6 måneder
+composite,"{""type"": ""start_end"", ""date"": ""$1"", ""start_date"": ""$3"", ""end_date"": ""$2""}",(.+) $ENDING (.+)_$AND?_$START (.+),-,-,hver dag  ender om 6 måneder og starter imorgen,-
+composite,"{""type"": ""starting"", ""date"": ""$1"", ""start_date"": ""$2""}",(.+)_$AND?_$START (.+),-,-,hver dag starter i morgen,-
+composite,"{""type"": ""ending"", ""date"": ""$1"", ""end_date"": ""$2""}",(.+)_$AND?_$ENDING (.+),-,-,hver dag ender om 6 måneder,-
+composite,"{""type"": ""before_after"", ""number"": ""$1"", ""unit"": ""$2"", ""mod"": ""before"", ""rel_date"": ""$3""}",$U-IN_($N)_($UNIT)_$BEFORE_(.+)?,-,-,3 dage før marts 3.,-
+composite,"{""type"": ""before_after"", ""number"": ""$1"", ""unit"": ""$2"", ""mod"": ""after"", ""rel_date"": ""$3""}",$U-IN_($N)_($UNIT)_$AFTER_(.+)?,-,-,5 dage efter 2. april,-
+,,,,,,
+recurring,"{""type"": ""every_comma"", ""patterns"": ""$1"", ""time"": ""$2""}","$EV ([^,]+,.+)_($TIME)?",-,-,"hver 5,6 kl 3pm","hver man, tir"
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",$EV ($N)?_$U-YEARS,-,-,hver 3 år,-
+recurring,"{""type"": ""every_year"", ""number"": ""$1""}",($N)?_$U-YEARS,-,-,årligt,2 år
+,,,,,,
+recurring,"{""type"": ""every_month"", ""number"": ""$1""}",$EV ($N)?_$RS?_$U-MONTHS,-,-,hver 2 måneder,-
+recurring,"{""type"": ""every_spec_month"", ""number"": ""$1"", ""month"": ""$2""}",$EV ($N)_$RS? ($MONTH),-,-,hver 2. april,-
+recurring,"{""type"": ""every_spec_month"", ""number"": ""$2"", ""month"": ""$1""}",$EV ($MONTH)_($N)_$RS?,-,-,hver april 3.,-
+recurring,"{""type"": ""every_last_day"", ""month"": ""$1""}",$EV $U-LAST_$U-DAYS_$U-OF_($MONTH)?_$U-MONTHS?,-,-,hver sidste dag af april,hver sidste dag april
+recurring,"{""type"": ""every_last_work_day"", ""month"": ""$1""}",$EV $U-LAST_$U-WORKDAYS_$U-OF_($MONTH)?_$U-MONTHS?,-,-,hver sidst arbejdsdag af maj,hver sidste arbejdsdag maj
+recurring,"{""type"": ""every_other_week_day""}",$EV 2 $U-WORKDAYS,-,-,hver 2 arbejdsdage,-
+recurring,"{""type"": ""every_spec_work_day"", ""number"": ""$1""}",$EV ($N)_$RS_$U-WORKDAYS,-,-,hver 3. arbejdsdag,-
+recurring,"{""type"": ""every_week_day"", ""number"": ""$1""}",$EV ($N)?_$RS?_$U-WORKDAYS,-,-,hver 3 arbejdsdag,hver arbejdsdag
+recurring,"{""type"": ""every_week"", ""number"": ""$1""}",$EV ($N)?_$RS?_$U-WEEKS,-,-,hver 3. uge,hver uge
+recurring,"{""type"": ""every_day_month"", ""number1"": ""$1"", ""number2"": ""$2""}",$EV ($N)$SEP($N),-,-,hver 5/5,-
+,,,,,,
+recurring,"{""type"": ""every_other_day""}",$EV $U-OTHER_$U-DAYS,-,-,hver anden dag,-
+,,,,,,
+recurring,"{""type"": ""every_next_weekday"", ""weekday"": ""$1""}",$EV $U-NEXT ($WEEKDAY),-,-,hver næste mandag,-
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",($N)_$RS?_$U-OF $EV $U-MONTHS,-,-,5. af hver månede,-
+,,,,,,
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""$1"", ""weekday"": ""$2"", ""month"": ""$3""}",$EV ($N)_$RS?_($WEEKDAY)_$U-IN_($MONTH),-,-,hver 3. mandag i maj,-
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$1"", ""month"": ""$3""}",$EV ($WEEKDAY)_($N)_$RS?_$U-IN_($MONTH),-,-,hver mandag 3. i maj,-
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY) ($TIME),-,-,hver man 12pm,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""$2"", ""weekday"": ""$1""}",$EV ($WEEKDAY)_($N)_$RS?,-,-,hver mandag 3.,-
+recurring,"{""type"": ""every_reg_weekday"", ""weekday"": ""$1""}",$EV ($WEEKDAY),-,-,hver mandag,hver tirsdag
+recurring,"{""type"": ""every_spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$1"", ""month"": ""$2""}",$EV $U-LAST_($WEEKDAY)_$U-IN_($MONTH),-,-,hver sidste mandag i maj,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",$EV ($N)_$RS?_($WEEKDAY),-,-,hver 3. mandag,-
+recurring,"{""type"": ""every_spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$EV $U-LAST_($WEEKDAY),-,-,hver sidste mandag,-
+,,,,,,
+recurring,"{""type"": ""every_hour"", ""number"": ""$1""}",$EV ($N)?_$U-HOURS,-,-,hver 3 timer,-
+,,,,,,
+recurring,"{""type"": ""every_day"", ""number"": ""$1""}",$EV ($N)?_$U-DAYS,-,-,hver 3 dage,-
+recurring,"{""type"": ""every_spec_day"", ""number"": ""$1""}",$EV ($N)_$RS?_<dag(..)>?,-,-,hver 3.,-
+,,,,,,
+recurring,"{""type"": ""comma"", ""patterns"": ""$1"", ""time"": ""$2""}","([^,]+,.+)_($TIME)?",-,-,"man, tir",
+,,,,,,
+date,"{""type"": ""today""}",i_dag|nu,-,-,i dag,-
+date,"{""type"": ""tomorrow""}",i_morgen,-,-,i morgen,-
+date,"{""type"": ""yesterday""}",i_går,-,-,i går,-
+date,"{""type"": ""next_week""}",næste_uge,-,-,næste uge,-
+,,,,,,
+recurring,"{""type"": ""spec_work_day"", ""number"": ""$1""}",($N)_$RS_$U-WORKDAYS,-,-,3. arbejdsdag,-
+date,"{""type"": ""last_day"", ""month"": ""$1""}",$U-LAST $U-OF_($MONTH),-,-,sidst af maj,-
+date,"{""type"": ""last_day"", ""month"": ""$1""}",$U-LAST $U-DAYS_$U-OF_($MONTH)?,-,-,sidste dag af maj,-
+date,"{""type"": ""last_work_day"", ""month"": ""$1""}",$U-LAST $U-WORKDAYS_$U-OF_($MONTH)?,-,-,sidste arbejdsdag af maj,-
+date,"{""type"": ""other_work_day""}",2 $U-WORKDAYS,-,-,2 arbejdsdage,-
+date,"{""type"": ""work_day""}",$U-WORKDAYS,-,-,arbejdsdag,-
+date,"{""type"": ""next_weekday"", ""weekday"": ""$1""}",$U-NEXT ($WEEKDAY),-,-,næste mandag,-
+,,,,,,
+date,"{""type"": ""spec_weekday_month"", ""number"": ""$1"", ""weekday"": ""$2"", ""month"": ""$3""}",($N)_$RS?_($WEEKDAY)_$U-IN_($MONTH),-,-,3. mandag i maj,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""$2"", ""weekday"": ""$1"", ""month"": ""$3""}",($WEEKDAY)_($N)_$RS?_$U-IN_($MONTH),-,-,mandag 3. i maj,-
+date,"{""type"": ""spec_weekday_month"", ""number"": ""5"", ""weekday"": ""$1"", ""month"": ""$2""}",$U-LAST_($WEEKDAY)_$U-IN_($MONTH),-,-,sidste mandag i maj,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($WEEKDAY) <$TIME>,-,-,mandag 3pm,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",<$TIME> ($WEEKDAY),-,-,3pm mandag,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$1"", ""weekday"": ""$2""}",($N)_$RS? ($WEEKDAY),-,-,3. mandag,-
+date,"{""type"": ""spec_weekday"", ""number"": ""$2"", ""weekday"": ""$1""}",($WEEKDAY) ($N)_$RS?,-,-,mandag 3.,-
+date,"{""type"": ""spec_weekday"", ""number"": ""5"", ""weekday"": ""$1""}",$U-LAST_($WEEKDAY),-,-,sidste mandag,-
+,,,,,,
+date,"{""type"": ""date_x_forced"", ""year"": ""$1"", ""number1"": ""$2"", ""number2"": ""$3""}",($YEAR)$SEP($RN)$SEP($RN),-,-,"""2014/5/5""",-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$2"", ""month"": ""$3""}",($YEAR)_($N)_$RS? ($MONTH),-,-,2014 3. maj,-
+date,"{""type"": ""date"", ""year"": ""$1"", ""number"": ""$3"", ""month"": ""$2""}",($YEAR)_($MONTH)_($N)_$RS?,-,-,2014 maj 3.,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$1"", ""month"": ""$2""}",($N)_$RS?_($MONTH)_($YEAR),-,-,3. maj 2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$1"", ""month"": ""$2""}",($N)_$RS?_($MONTH),-,-,3. maj,-
+date,"{""type"": ""date"", ""year"": ""$3"", ""number"": ""$2"", ""month"": ""$1""}",($MONTH)_($N)_$RS?_($YEAR),-,-,maj 3. 2014,-
+date,"{""type"": ""date"", ""year"": """", ""number"": ""$2"", ""month"": ""$1""}",($MONTH)_($N)_$RS?,-,-,maj 3.,-
+,,,,,,
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)$SEP($RN)<$SEP($YEAR)>,-,-,"""5/5/2014""",-
+date,"{""type"": ""date_x"", ""year"": ""$3"", ""number1"": ""$1"", ""number2"": ""$2""}",($RN)[-/]($RN)<[-/]($YEAR)?>?,-,-,"""5/5""",-
+date,"{""type"": ""date_month"", ""month"": ""$1""}",($SMONTH),-,-,januar,-
+,,,,,,
+,"{""type"": ""no_date""}",ingen dato|ingen deadline,-,-,ingen deadline,-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",$R-IN_($RN)_($UNIT),-,-,om 2 måneder,-
+date,"{""type"": ""plus"", ""number"": ""$1"", ""unit"": ""$2""}",\+_($RN)_($UNIT)?,-,-,"""+2 måneder""",-
+date,"{""type"": ""minus"", ""number"": ""$1"", ""unit"": ""$2""}",(\-$N)_($UNIT)?,-,-,-2 dage,-
+date,"{""type"": ""regular_weekday"", ""weekday"": ""$1""}",($WEEKDAY),-,-,mandag,-
+date,"{""type"": ""spec_day"", ""number"": ""$1""}",($N)_$RS_<dag(..)>?,-,-,"""3.""",-
+,,,,,,
+date,"{""type"": ""time""}",<$TIME>,-,-,"""2pm""",-
