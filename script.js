@@ -43,9 +43,9 @@ for (var i = 0; i < tags.length; i++) {
                             "location" : this.slot
                           });
                           alert(JSON.stringify(dataArray));
-                          /*if(!onSecondStep()){
+                          if(!onSecondStep()){
                             this.classList.add('buneme_fluctuate');
-                          }*/
+                          }
                           event.stopPropagation()
                       }
                       break;
